@@ -1,44 +1,28 @@
-import { ChangeEvent, useState } from 'react'
-import './App.css'
-import { VegaChart } from './components/VegaChart'
-import { makeVegaChartSpec } from './utils/makeChartSpec'
+import "./App.css";
+import { DrawerAppBar, Page } from "./components/DrawerAppBar";
+import { ReactNode, useState } from "react";
 
 function App() {
-  const [data, setData] = useState<number[]>([])
-  const spec = makeVegaChartSpec(data)
-
-  const handleCsvUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) {
-      return;
-    }
-
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      // Read the numbers of the first column
-      // named "data" and resulting in an array of numbers
-      const text = reader.result as string;
-      const lines = text.split('\n');
-      const numbers = lines.map(line => {
-        const parts = line.split(',');
-        return parseFloat(parts[0]);
-      }).filter(num => !isNaN(num));
-      setData(numbers);
-    }
-
-    reader.readAsText(file);
-    reader.onerror = (error) => {
-      console.error('Error reading file:', error);
-    }
-  }
-
-  return (
-    <>
-      <input type="file" accept=".csv" onChange={handleCsvUpload} />
-      <VegaChart spec={spec}></VegaChart>
-    </>
-  )
+  const [page, setPage] = useState<Page>(Page.Introduction);
+  const pageComponent : ReactNode =
+    page === Page.Introduction ? (
+      <div>Introduction</div>
+    ) : page === Page.ManageScenarios ? (
+      <div>Manage Scenarios</div>
+    ) : page === Page.ScenarioParameters ? (
+      <div>Scenario Parameters</div>
+    ) : page === Page.CapabilityReview ? (
+      <div>Capability Review</div>
+    ) : page === Page.PlannedActions ? (
+      <div>Planned Actions</div>
+    ) : page === Page.CapabilityAssessment ? (
+      <div>Capability Assessment</div>
+    ) : page === Page.Reports ? (
+      <div>Reports</div>
+    ) : page === Page.DataManager ? (
+      <div>Data Manager</div>
+    ) : null;
+  return <DrawerAppBar setPage={setPage}>{pageComponent}</DrawerAppBar>;
 }
 
-export default App
+export default App;
