@@ -1,26 +1,36 @@
 import "./App.css";
 import { DrawerAppBar, Page } from "./components/DrawerAppBar";
 import { ReactNode, useState } from "react";
+import { Introduction } from "./pages/introduction/introduction";
+import { DataManager } from "./pages/data-manager/data-manager";
+import { ScenarioParameters } from "./pages/scenario-parameters/scenario-parameters";
+import { CapabilityReview } from "./pages/capability-review/capability-review";
+import { CapabilityAssessment } from "./pages/capability-assessment/capability-assessment";
+import { PlannedActions } from "./pages/planned-actions/planned-actions";
+import { ManageScenarios } from "./pages/manage-scenarios/manage-scenarios";
+import { Reports } from "./pages/reports/reports";
 
 function App() {
   const [page, setPage] = useState<Page>(Page.Introduction);
+  // Browser router cannot be used 
+  // because this app is a static HTML page
   const pageComponent : ReactNode =
     page === Page.Introduction ? (
-      <div>Introduction</div>
+      <Introduction />
     ) : page === Page.ManageScenarios ? (
-      <div>Manage Scenarios</div>
+      <ManageScenarios />
     ) : page === Page.ScenarioParameters ? (
-      <div>Scenario Parameters</div>
+      <ScenarioParameters />
     ) : page === Page.CapabilityReview ? (
-      <div>Capability Review</div>
+      <CapabilityReview />
     ) : page === Page.PlannedActions ? (
-      <div>Planned Actions</div>
+      <PlannedActions />
     ) : page === Page.CapabilityAssessment ? (
-      <div>Capability Assessment</div>
+      <CapabilityAssessment />
     ) : page === Page.Reports ? (
-      <div>Reports</div>
+      <Reports />
     ) : page === Page.DataManager ? (
-      <div>Data Manager</div>
+      <DataManager />
     ) : null;
   return <DrawerAppBar setPage={setPage}>{pageComponent}</DrawerAppBar>;
 }
