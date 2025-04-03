@@ -31,8 +31,11 @@ export const SidebarLayout = (props: Props) => {
 
   return (
     <div className="flex w-full h-full">
-      {/* Sidebar */}
-      <div className="w-80 lg:w-96 h-full hidden lg:flex drop-shadow-sm bg-white">
+      {/* Sidebar | Tailwind shadows don't work in Edge */}
+      <div
+        className="w-80 lg:w-96 h-full hidden lg:flex bg-white"
+        style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
+      >
         {props.sidebarContent}
       </div>
 

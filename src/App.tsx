@@ -1,5 +1,5 @@
 import "./App.css";
-import { DrawerAppBar, Page } from "./components/DrawerAppBar";
+import { MainLayout, Page } from "./components/main-layout";
 import { ReactNode, useState } from "react";
 import { Introduction } from "./pages/introduction/introduction";
 import { DataManager } from "./pages/data-manager/data-manager";
@@ -32,7 +32,7 @@ function App() {
     ) : page === Page.DataManager ? (
       <DataManager />
     ) : null;
-  return <DrawerAppBar setPage={setPage}>{pageComponent}</DrawerAppBar>;
+  return <MainLayout setPage={setPage}>{pageComponent}</MainLayout>;
 }
 
 export default App;

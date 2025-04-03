@@ -9,5 +9,9 @@ export default defineConfig({
     cssCodeSplit: false,
     assetsInlineLimit: 100000000, // force inline everything
     minify: false,
+  },
+  server: {
+    hmr: true,
+    port: 5173
   }
 })

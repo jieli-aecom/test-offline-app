@@ -54,7 +54,7 @@ const drawerWidth = 240;
 const TITLE = 'Regional Share Design';
 const TOOLBAR_HEIGHT_PX = 64; // px
 
-export function DrawerAppBar(props: Props) {
+export function MainLayout(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
 
