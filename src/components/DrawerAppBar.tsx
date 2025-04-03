@@ -68,7 +68,7 @@ export function DrawerAppBar(props: Props) {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       {/* Large screens only */}
-      <AppBar component="nav" sx={{ backgroundColor: 'white' }}>
+      <AppBar component="nav" sx={{ backgroundColor: 'white', zIndex: 1000 }}>
         <Toolbar sx={{ gap: 8}}>
           <IconButton
             aria-label="open drawer"
@@ -133,6 +133,7 @@ export function DrawerAppBar(props: Props) {
             height: `calc(100vh - ${TOOLBAR_HEIGHT_PX}px)`,
             backgroundColor: 'transparent',
             overflowY: 'auto',
+            width: '100%',
           }}
         >
           {props.children}

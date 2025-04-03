@@ -11,7 +11,7 @@ import { ManageScenarios } from "./pages/manage-scenarios/manage-scenarios";
 import { Reports } from "./pages/reports/reports";
 
 function App() {
-  const [page, setPage] = useState<Page>(Page.Introduction);
+  const [page, setPage] = useState<Page>(Page.CapabilityAssessment);
   // Browser router cannot be used 
   // because this app is a static HTML page
   const pageComponent : ReactNode =
