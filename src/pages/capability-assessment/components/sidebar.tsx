@@ -9,6 +9,10 @@ import {
   DEFAULT_LOCAL_DIRECTORY,
   useCapacitiesData,
 } from "../hooks/use-capacities-data";
+import { DropdownSelectBox } from "../../../components/dropdown-select-box";
+import { LOCATIONS, Location } from "../consts/locations";
+import { CATEGORIES, Category } from "../consts/categories";
+import { Domain, DOMAINS } from "../consts/domains";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -29,9 +33,6 @@ export const Sidebar = () => {
   const [showCopied, setShowCopied] = useState(false);
   const [showCsvUploadError, setShowCsvUploadError] = useState(false);
   const [showCsvUploadSuccess, setShowCsvUploadSuccess] = useState(false);
-
-  // Filter states
-  const [selectedValues, setSelectedValues] = useState<string[]>([]);
 
   const handleUploadClick = () => {
     // Reset the input value to allow re-uploading the same file
@@ -63,7 +64,17 @@ export const Sidebar = () => {
     });
   };
 
-  const { data, handleCsvUpload, handleCsvDownload } = useCapacitiesData({
+  const {
+    data,
+    handleCsvUpload,
+    handleCsvDownload,
+    selectedLocation,
+    setSelectedLocation,
+    selectedDomains,
+    setSelectedDomains,
+    selectedCategories,
+    setSelectedCategories,
+  } = useCapacitiesData({
     handleCsvUploadError,
     handleCsvUploadSuccess,
   });
@@ -71,7 +82,7 @@ export const Sidebar = () => {
   const hasData = data?.length > 0;
 
   return (
-    <div className="p-4 py-8 w-full flex flex-col gap-10">
+    <div className="p-4 py-8 w-full h-full flex flex-col gap-4">
       {/* File upload section */}
       <div className="w-full flex flex-col gap-2">
         {/* Default path */}
@@ -116,6 +127,7 @@ export const Sidebar = () => {
         </Button>
       </div>
 
+      {/* Alerts */}
       <div className="fixed top-0 left-0 right-0 flex justify-center z-1000 p-4">
         {showCopied && (
           <Alert severity="success">Local file directory copied.</Alert>
@@ -130,12 +142,33 @@ export const Sidebar = () => {
         )}
       </div>
 
-      <ButtonFilterBox
-        title="Filter"
-        values={["aaa", "bbb", "ccc"]}
-        selectedValues={selectedValues}
-        onChange={setSelectedValues}
-      />
+      {/* Filters */}
+      <div className="grow w-full overflow-y-auto flex flex-col gap-4">
+        <DropdownSelectBox
+          title="Location"
+          values={LOCATIONS as string[]}
+          selectedValue={selectedLocation as string}
+          onChange={(newValue: string) => {
+            setSelectedLocation(newValue as Location);
+          }}
+        />
+        <ButtonFilterBox
+          title="Domains"
+          values={DOMAINS as string[]}
+          selectedValues={selectedDomains as string[]}
+          onChange={(newValues: string[]) => {
+            setSelectedDomains(newValues as Domain[]);
+          }}
+        />
+        <ButtonFilterBox
+          title="Categories"
+          values={CATEGORIES as string[]}
+          selectedValues={selectedCategories as string[]}
+          onChange={(newValues: string[]) => {
+            setSelectedCategories(newValues as Category[]);
+          }}
+        />
+      </div>
 
       {/* Download data */}
       <Button

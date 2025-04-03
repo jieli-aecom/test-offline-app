@@ -22,6 +22,8 @@ export const ButtonFilterBox = (props: FilterBoxProps) => {
 
   const hasNoSelectedValues = props.selectedValues?.length === 0;
 
+  const filterColor = !hasNoSelectedValues ? "primary" : "disabled";
+
   return (
     <div className="border border-solid rounded border-slate-300 w-full">
       {/* Title section */}
@@ -35,7 +37,7 @@ export const ButtonFilterBox = (props: FilterBoxProps) => {
             title="Clear filter"
             onClick={handleClear}
           >
-            <FilterAltOff color="primary" sx={{fontSize: 18}} />
+            <FilterAltOff color={filterColor} sx={{fontSize: 18}} />
           </IconButton>
         </div>
       </div>
@@ -43,7 +45,7 @@ export const ButtonFilterBox = (props: FilterBoxProps) => {
       {/* Divider */}
       <Divider />
 
-      <div className="w-full p-2 flex flex-col gap-2">
+      <div className="w-full p-2 flex flex-col gap-2 max-h-56 overflow-y-auto">
         {props.values.map((value, index) => {
           const isSelected = props.selectedValues.includes(value);
           const variant = isSelected ? "contained" : "outlined";
@@ -55,7 +57,8 @@ export const ButtonFilterBox = (props: FilterBoxProps) => {
               color={"primary"}
               onClick={() => handleClick(value)}
             >
-              {value}
+              <span className="normal-case"
+              >{value}</span>
             </Button>
           );
         })}
