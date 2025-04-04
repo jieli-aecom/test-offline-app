@@ -250,7 +250,7 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
     URL.revokeObjectURL(url);
   };
 
-  const handleUpdateTableAttribute = (id: number, colId: string, value: any) => {
+  const handleUpdateTableAttribute = (id: number, colId: keyof CapacityAssessmentTableRow, value: any) => {
     // First update ref
     // Note id should be the same as the array indesx of `rawData.current`
     // Mutate the raw data

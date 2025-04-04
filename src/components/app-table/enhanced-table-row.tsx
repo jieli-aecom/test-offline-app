@@ -4,15 +4,14 @@ import Checkbox from "@mui/material/Checkbox";
 import { TableColumnDefinition, AppTableRow } from "./types";
 import { EnhancedTableCell } from "./enhanced-table-cell";
 
-export interface EnhancedTableRowProps {
+export interface EnhancedTableRowProps<T extends AppTableRow> {
   row: AppTableRow;
-  columnDefinitions: TableColumnDefinition[]; // Corresponding to each column
-  handleSelect: (currentSelected: number) => void; // currentSelected is 0 or 1, 0 means not selected, 1 means selected
-  // function will reverse the currentSelected value
-  handleUpdateTableAttribute: (key: string, value: any) => void; // `key` is the key to update, update in main table
+  columnDefinitions: TableColumnDefinition<T>[];
+  handleSelect: (currentSelected: number) => void; 
+  handleUpdateTableAttribute: (key: keyof T, value: number | string) => void;
 }
 
-export const EnhancedTableRow = (props: EnhancedTableRowProps) => {
+export function EnhancedTableRow<T extends AppTableRow> (props: EnhancedTableRowProps<T>) {
   const { row, handleSelect, columnDefinitions, handleUpdateTableAttribute } =
     props;
   return (
@@ -35,7 +34,7 @@ export const EnhancedTableRow = (props: EnhancedTableRowProps) => {
       </TableCell>
       {columnDefinitions?.map((def) => (
         <EnhancedTableCell
-          key={def.id}
+          key={def.id as string}
           def={def}
           align={"left"}
           value={row[def.id as keyof AppTableRow]}

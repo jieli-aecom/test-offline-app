@@ -21,7 +21,7 @@ export interface EnhancedTableProps<T extends AppTableRow> {
   setPage: (page: number) => void;
   rowsPerPage: number;
   setRowsPerPage: (rowsPerPage: number) => void;
-  handleUpdateTableAttribute: (rowId: number, key: string, value: any) => void; // rowId is the `Id` field of the row, `key` is the key to update
+  handleUpdateTableAttribute: (rowId: number, key: keyof T, value: number | string) => void; // rowId is the `Id` field of the row, `key` is the key to update
 }
 
 export function EnhancedTable<T extends AppTableRow>(props: EnhancedTableProps<T>) {
@@ -73,7 +73,7 @@ export function EnhancedTable<T extends AppTableRow>(props: EnhancedTableProps<T
                     handleSelect={(currentSelected: number) =>
                       handleSelect(row.Id, currentSelected)
                     }
-                    handleUpdateTableAttribute={(key: string, value: any) =>
+                    handleUpdateTableAttribute={(key: keyof T, value: any) =>
                       props.handleUpdateTableAttribute(row.Id, key, value)
                     }
                   />
