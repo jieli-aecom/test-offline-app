@@ -21,31 +21,31 @@ export interface SidebarProps {
   hasData: boolean;
   handleCsvUpload: (event: ChangeEvent<HTMLInputElement>) => void;
   handleCsvDownload: () => void;
-  showCsvUploadError: boolean,
-  showCsvUploadSuccess: boolean,
+  showCsvUploadError: boolean;
+  showCsvUploadSuccess: boolean;
 }
 
 export function Sidebar(props: SidebarProps) {
-    const uploadInputRef = useRef<HTMLInputElement>(null);
-    const [localPath, setLocalPath] = useState<string>(DEFAULT_LOCAL_DIRECTORY);
-  
-    const [showCopied, setShowCopied] = useState(false);
-  
-    const handleUploadClick = () => {
-      // Reset the input value to allow re-uploading the same file
-      if (uploadInputRef.current) {
-        uploadInputRef.current.value = "";
-      }
-    };
-  
-    const handleCopyPath = () => {
-      navigator.clipboard.writeText(localPath).then(() => {
-        setShowCopied(true);
-        setTimeout(() => {
-          setShowCopied(false);
-        }, 3000);
-      });
-    };
+  const uploadInputRef = useRef<HTMLInputElement>(null);
+  const [localPath, setLocalPath] = useState<string>(DEFAULT_LOCAL_DIRECTORY);
+
+  const [showCopied, setShowCopied] = useState(false);
+
+  const handleUploadClick = () => {
+    // Reset the input value to allow re-uploading the same file
+    if (uploadInputRef.current) {
+      uploadInputRef.current.value = "";
+    }
+  };
+
+  const handleCopyPath = () => {
+    navigator.clipboard.writeText(localPath).then(() => {
+      setShowCopied(true);
+      setTimeout(() => {
+        setShowCopied(false);
+      }, 3000);
+    });
+  };
   return (
     <div className="p-4 py-8 w-full h-full flex flex-col gap-4">
       {/* File upload section */}
@@ -107,18 +107,43 @@ export function Sidebar(props: SidebarProps) {
         )}
       </div>
 
+      <div className="grow"></div>
+
       {/* Download data */}
-      <Button
-        component="label"
-        role={undefined}
-        variant="contained"
-        startIcon={<CloudDownloadIcon />}
-        className="w-full"
-        onClick={props.handleCsvDownload}
-        disabled={!props.hasData}
-      >
-        Dump Data
-      </Button>
+      <div className="w-full flex flex-col gap-2">
+        {/* Default path */}
+        <div className="w-full flex gap-2 items-center">
+          <TextField
+            id="default-local-file-path-repeat"
+            label="Local File Directory"
+            size="small"
+            sx={{ fontSize: "0.9rem" }}
+            value={localPath}
+            onChange={(e) => setLocalPath(e.target.value)}
+            variant="outlined"
+            fullWidth
+          />
+          <IconButton
+            sx={{ width: "2rem", height: "2rem" }}
+            area-label="copy path"
+            title="Copy path"
+            onClick={handleCopyPath}
+          >
+            <ContentCopy color="primary" sx={{ fontSize: 18 }} />
+          </IconButton>
+        </div>
+        <Button
+          component="label"
+          role={undefined}
+          variant="contained"
+          startIcon={<CloudDownloadIcon />}
+          className="w-full"
+          onClick={props.handleCsvDownload}
+          disabled={!props.hasData}
+        >
+          Dump Data
+        </Button>
+      </div>
     </div>
   );
 }

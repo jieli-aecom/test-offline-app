@@ -29,7 +29,7 @@ export interface useActionsDataProps {
 }
 
 export const DEFAULT_LOCAL_DIRECTORY =
-  "C:/repos/test-offline-app/offline-app/sample-data/";
+  "C:/offline-app/sample-data/";
 export const FILE_NAME = "actions-data.csv";
 
 export const useActionsData = (props: useActionsDataProps) => {

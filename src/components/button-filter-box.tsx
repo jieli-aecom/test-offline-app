@@ -27,11 +27,11 @@ export const ButtonFilterBox = (props: FilterBoxProps) => {
   return (
     <div className="border border-solid rounded border-slate-300 w-full">
       {/* Title section */}
-      <div className="flex p-2 justify-between items-center">
-        <h3 className="p-0 m-0 text-base">{props.title}</h3>
+      <div className="flex px-2 py-1 justify-between items-center">
+        <h3 className="p-0 m-0 text-sm">{props.title}</h3>
         <div className="flex gap-2 items-center">
           <IconButton
-            sx={{ width: "2rem", height: "2rem" }}
+            sx={{ width: "1.5rem", height: "1.5rem" }}
             disabled={hasNoSelectedValues}
             aria-label="clear filter"
             title="Clear filter"
@@ -45,7 +45,7 @@ export const ButtonFilterBox = (props: FilterBoxProps) => {
       {/* Divider */}
       <Divider />
 
-      <div className="w-full p-2 flex flex-col gap-2 max-h-56 overflow-y-auto">
+      <div className="w-full p-2 flex flex-col gap-1 max-h-56 overflow-y-auto">
         {props.values.map((value, index) => {
           const isSelected = props.selectedValues.includes(value);
           const variant = isSelected ? "contained" : "outlined";
@@ -57,7 +57,7 @@ export const ButtonFilterBox = (props: FilterBoxProps) => {
               color={"primary"}
               onClick={() => handleClick(value)}
             >
-              <span className="normal-case"
+              <span className="normal-case text-xs"
               >{value}</span>
             </Button>
           );

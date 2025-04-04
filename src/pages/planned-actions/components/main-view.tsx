@@ -1,3 +1,4 @@
+import { Divider } from "@mui/material";
 import { EnhancedTable } from "../../../components/app-table/enhanced-table";
 import {
   defenseColumnDefinitions,
@@ -49,6 +50,7 @@ export function MainView(props: MainViewProps) {
   return (
     <div className="w-full h-full flex flex-col overflow-auto gap-2 p-4">
       <div className="w-[115rem] overflow-x-auto flex flex-col">
+        <h1 className="!text-2xl mt-2 !font-semibold text-slate-700">Priorities</h1>
         <div className="w-full pl-[14rem]">
           <EnhancedTable
             hasData={props.hasData}
@@ -60,6 +62,8 @@ export function MainView(props: MainViewProps) {
             disableSelect={true}
           />
         </div>
+        <Divider />
+        <h1 className="!text-2xl mt-2 !font-semibold text-slate-700">Defense</h1>
         <div className="w-full">
           <EnhancedTable
             hasData={props.hasData}
@@ -71,8 +75,10 @@ export function MainView(props: MainViewProps) {
             disableSelect={true}
           />
         </div>
+        <Divider />
+        <h1 className="!text-2xl mt-2 !font-semibold text-slate-700">Support</h1>
         <div className="w-full">
-        <EnhancedTable
+          <EnhancedTable
             hasData={props.hasData}
             dataLength={props.supportData?.length ?? 0}
             tableView={props.supportData ?? []}
@@ -82,8 +88,10 @@ export function MainView(props: MainViewProps) {
             disableSelect={true}
           />
         </div>
+        <Divider />
+        <h1 className="!text-2xl mt-2 !font-semibold text-slate-700">Facilities</h1>
         <div className="w-full">
-        <EnhancedTable
+          <EnhancedTable
             hasData={props.hasData}
             dataLength={props.facilitiesData?.length ?? 0}
             tableView={props.facilitiesData ?? []}

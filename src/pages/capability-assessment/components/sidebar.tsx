@@ -5,9 +5,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import { styled } from "@mui/material/styles";
 import { ContentCopy } from "@mui/icons-material";
-import {
-  DEFAULT_LOCAL_DIRECTORY,
-} from "../hooks/use-capacities-data";
+import { DEFAULT_LOCAL_DIRECTORY } from "../hooks/use-capacities-data";
 import { DropdownSelectBox } from "../../../components/dropdown-select-box";
 import { LOCATIONS, Location } from "../consts/locations";
 import { CATEGORIES, Category } from "../consts/categories";
@@ -29,16 +27,16 @@ export interface SidebarProps {
   hasData: boolean;
   handleCsvUpload: (event: ChangeEvent<HTMLInputElement>) => void;
   handleCsvDownload: () => void;
-  selectedIncStatuses: string[],
-  setSelectedIncStatuses: (newValues: string[]) => void,
-  selectedLocation: Location,
-  setSelectedLocation: (newValue: Location) => void,
-  selectedDomains: Domain[],
-  setSelectedDomains: (newValues: Domain[]) => void,
-  selectedCategories: Category[],
-  setSelectedCategories: (newValues: Category[]) => void,
-  showCsvUploadError: boolean,
-  showCsvUploadSuccess: boolean,
+  selectedIncStatuses: string[];
+  setSelectedIncStatuses: (newValues: string[]) => void;
+  selectedLocation: Location;
+  setSelectedLocation: (newValue: Location) => void;
+  selectedDomains: Domain[];
+  setSelectedDomains: (newValues: Domain[]) => void;
+  selectedCategories: Category[];
+  setSelectedCategories: (newValues: Category[]) => void;
+  showCsvUploadError: boolean;
+  showCsvUploadSuccess: boolean;
 }
 
 export const Sidebar = (props: SidebarProps) => {
@@ -64,7 +62,7 @@ export const Sidebar = (props: SidebarProps) => {
   };
 
   return (
-    <div className="p-4 py-8 w-full h-full flex flex-col gap-4">
+    <div className="p-4 py-8 w-full h-full flex flex-col gap-8">
       {/* File upload section */}
       <div className="w-full flex flex-col gap-2">
         {/* Default path */}
@@ -135,7 +133,7 @@ export const Sidebar = (props: SidebarProps) => {
           }}
         />
         <ButtonFilterBox
-          title="Domains"
+          title="Included"
           values={["TRUE"]}
           selectedValues={props.selectedIncStatuses}
           onChange={(newValues: string[]) => {
@@ -161,17 +159,40 @@ export const Sidebar = (props: SidebarProps) => {
       </div>
 
       {/* Download data */}
-      <Button
-        component="label"
-        role={undefined}
-        variant="contained"
-        startIcon={<CloudDownloadIcon />}
-        className="w-full"
-        onClick={props.handleCsvDownload}
-        disabled={!props.hasData}
-      >
-        Dump Data
-      </Button>
+      <div className="w-full flex flex-col gap-2">
+        {/* Default path */}
+        <div className="w-full flex gap-2 items-center">
+          <TextField
+            id="default-local-file-path-repeat"
+            label="Local File Directory"
+            size="small"
+            sx={{ fontSize: "0.9rem" }}
+            value={localPath}
+            onChange={(e) => setLocalPath(e.target.value)}
+            variant="outlined"
+            fullWidth
+          />
+          <IconButton
+            sx={{ width: "2rem", height: "2rem" }}
+            area-label="copy path"
+            title="Copy path"
+            onClick={handleCopyPath}
+          >
+            <ContentCopy color="primary" sx={{ fontSize: 18 }} />
+          </IconButton>
+        </div>
+        <Button
+          component="label"
+          role={undefined}
+          variant="contained"
+          startIcon={<CloudDownloadIcon />}
+          className="w-full"
+          onClick={props.handleCsvDownload}
+          disabled={!props.hasData}
+        >
+          Dump Data
+        </Button>
+      </div>
     </div>
   );
 };
