@@ -1,10 +1,8 @@
 import Papa from "papaparse";
 import {
   ChangeEvent,
-  useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import {
@@ -41,10 +39,34 @@ export const useActionsData = (props: useActionsDataProps) => {
   const [supportData, setSupportData] = useState<SupportRecord[]>([]);
   const [facilitiesData, setFacilitiesData] = useState<FacilitiesRecord[]>([]);
 
-  // console.log("prioritiesData", prioritiesData);
-  // console.log("defenseData", defenseData);
-  // console.log("supportData", supportData);
-  // console.log("facilitiesData", facilitiesData);
+  // Check local storage
+  useEffect(() => {
+    const storedPrioritiesData = localStorage.getItem(
+      PRIORITY_DATA_LOCAL_STORAGE_KEY
+    );
+    const storedDefenseData = localStorage.getItem(
+      DEFENSE_DATA_LOCAL_STORAGE_KEY
+    );
+    const storedSupportData = localStorage.getItem(
+      SUPPORT_DATA_LOCAL_STORAGE_KEY
+    );
+    const storedFacilitiesData = localStorage.getItem(
+      FACILITIES_DATA_LOCAL_STORAGE_KEY
+    );
+
+    if (storedPrioritiesData) {
+      setPrioritiesData(JSON.parse(storedPrioritiesData));
+    }
+    if (storedDefenseData) {
+      setDefenseData(JSON.parse(storedDefenseData));
+    }
+    if (storedSupportData) {
+      setSupportData(JSON.parse(storedSupportData));
+    }
+    if (storedFacilitiesData) {
+      setFacilitiesData(JSON.parse(storedFacilitiesData));
+    }
+  }, []);
 
   const hasData = useMemo(() => {
     return (
@@ -203,11 +225,21 @@ export const useActionsData = (props: useActionsDataProps) => {
     setPrioritiesData((prevData) =>
       prevData.map((row) => (row.Id === id ? { ...row, [key]: value } : row))
     );
+    // Write to local storage
+    localStorage.setItem(
+      PRIORITY_DATA_LOCAL_STORAGE_KEY,
+      JSON.stringify(prioritiesData)
+    );
   }
 
   const handleDefenseDataUpdate = (id: number, key: keyof DefenseRecord, value: any) => {
     setDefenseData((prevData) =>
       prevData.map((row) => (row.Id === id ? { ...row, [key]: value } : row))
+    );
+    // Write to local storage
+    localStorage.setItem(
+      DEFENSE_DATA_LOCAL_STORAGE_KEY,
+      JSON.stringify(defenseData)
     );
   }
 
@@ -215,11 +247,21 @@ export const useActionsData = (props: useActionsDataProps) => {
     setSupportData((prevData) =>
       prevData.map((row) => (row.Id === id ? { ...row, [key]: value } : row))
     );
+    // Write to local storage
+    localStorage.setItem(
+      SUPPORT_DATA_LOCAL_STORAGE_KEY,
+      JSON.stringify(supportData)
+    );
   }
 
   const handleFacilitiesDataUpdate = (id: number, key: keyof FacilitiesRecord, value: any) => {
     setFacilitiesData((prevData) =>
       prevData.map((row) => (row.Id === id ? { ...row, [key]: value } : row))
+    );
+    // Write to local storage
+    localStorage.setItem(
+      FACILITIES_DATA_LOCAL_STORAGE_KEY,
+      JSON.stringify(facilitiesData)
     );
   }
 
