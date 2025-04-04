@@ -13,28 +13,32 @@ export interface EnhancedTableProps<T extends AppTableRow> {
   dataLength: number;
   tableView: T[];
   columnDefinitions: TableColumnDefinition<T>[];
-  order: Order;
-  orderBy: keyof T
-  setOrder: (order: Order) => void;
-  setOrderBy: (orderBy: keyof T) => void;
-  page: number;
-  setPage: (page: number) => void;
-  rowsPerPage: number;
-  setRowsPerPage: (rowsPerPage: number) => void;
   handleUpdateTableAttribute: (rowId: number, key: keyof T, value: number | string) => void; // rowId is the `Id` field of the row, `key` is the key to update
+  order?: Order;
+  orderBy?: keyof T
+  setOrder?: (order: Order) => void;
+  setOrderBy?: (orderBy: keyof T) => void;
+  page?: number;
+  setPage?: (page: number) => void;
+  rowsPerPage?: number;
+  setRowsPerPage?: (rowsPerPage: number) => void;
+  hideFooter?: boolean; // Optional property to hide the footer
 }
 
 export function EnhancedTable<T extends AppTableRow>(props: EnhancedTableProps<T>) {
   const handleChangePage = (_: unknown, newPage: number) => {
+    if(!props.setPage) return;
     props.setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
+    if(!props.setRowsPerPage || !props.setPage) return;
     props.setRowsPerPage(parseInt(event.target.value, 10));
     props.setPage(0);
   };
 
   const handleRequestSort = (_: MouseEvent<unknown>, property: string) => {
+    if(!props.setOrder || !props.setOrderBy) return;
     const isAsc = props.orderBy === property && props.order === "asc";
     props.setOrder(isAsc ? "desc" : "asc");
     props.setOrderBy(property);
@@ -83,7 +87,7 @@ export function EnhancedTable<T extends AppTableRow>(props: EnhancedTableProps<T
         </TableContainer>
       </div>
       <div className="w-full h-[2rem]">
-        {props.dataLength > 0 && (
+        {!props.hideFooter === true && props.page && props.rowsPerPage && props.dataLength > 0 && (
           <TablePagination
             rowsPerPageOptions={[10, 20, 40]}
             component="div"

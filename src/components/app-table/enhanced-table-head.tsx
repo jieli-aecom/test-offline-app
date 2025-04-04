@@ -18,21 +18,17 @@ interface Data {
 }
 
 export interface EnhancedTableHeadProps<T extends AppTableRow> {
-  onRequestSort: (event: MouseEvent<unknown>, property: string) => void;
-  order: Order;
-  orderBy: keyof T;
+  onRequestSort?: (event: MouseEvent<unknown>, property: string) => void;
+  order?: Order;
+  orderBy?: keyof T;
   columnDefinitions: TableColumnDefinition<T>[];
 }
 
 export function EnhancedTableHead<T extends AppTableRow>(props: EnhancedTableHeadProps<T>) {
-  const {
-    order,
-    orderBy,
-    onRequestSort,
-  } = props;
   const createSortHandler =
     (property: string) => (event: MouseEvent<unknown>) => {
-      onRequestSort(event, property);
+      if(!props.onRequestSort) return;
+      props.onRequestSort(event, property);
     };
 
   return (
@@ -46,21 +42,21 @@ export function EnhancedTableHead<T extends AppTableRow>(props: EnhancedTableHea
             width={column.width}
             align={"left"}
             padding="none"
-            sortDirection={orderBy === column.id ? order : false}
+            sortDirection={props.orderBy === column.id ? props.order : false}
             sx={{padding: '0.4rem', minWidth: column.width}}
           >
-            <TableSortLabel
-              active={orderBy === column.id}
-              direction={orderBy === column.id ? order : "asc"}
+            {props?.order && props?.orderBy && <TableSortLabel
+              active={props.orderBy === column.id}
+              direction={props.orderBy === column.id ? props.order : "asc"}
               onClick={createSortHandler(column.id as keyof Data)}
             >
               {column.label}
-              {orderBy === column.id ? (
+              {props.orderBy === column.id ? (
                 <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
+                  {props.order === "desc" ? "sorted descending" : "sorted ascending"}
                 </Box>
               ) : null}
-            </TableSortLabel>
+            </TableSortLabel>}
           </TableCell>
         ))}
       </TableRow>
