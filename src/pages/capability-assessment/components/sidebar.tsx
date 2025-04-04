@@ -99,7 +99,7 @@ export const Sidebar = (props: SidebarProps) => {
           className="w-full"
           onClick={handleUploadClick}
         >
-          Upload File
+          LOAD DATA
           <VisuallyHiddenInput
             type="file"
             accept=".csv"

@@ -80,9 +80,9 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
   );
 
   // Order states
-  const [order, setOrder] = useState<Order>("desc");
+  const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] =
-    useState<keyof CapacityAssessmentRecord>("Category");
+    useState<keyof CapacityAssessmentRecord>("Domain");
 
   const setOrderByColId = (id: keyof CapacityAssessmentTableRow) => {
     // This method is exposed to the table
