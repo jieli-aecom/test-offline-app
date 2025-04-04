@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { ButtonFilterBox } from "../../../components/button-filter-box";
 import { Button, IconButton, TextField, Alert } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -7,7 +7,6 @@ import { styled } from "@mui/material/styles";
 import { ContentCopy } from "@mui/icons-material";
 import {
   DEFAULT_LOCAL_DIRECTORY,
-  useCapacitiesData,
 } from "../hooks/use-capacities-data";
 import { DropdownSelectBox } from "../../../components/dropdown-select-box";
 import { LOCATIONS, Location } from "../consts/locations";
@@ -26,33 +25,33 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export const Sidebar = () => {
+export interface SidebarProps {
+  hasData: boolean;
+  handleCsvUpload: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleCsvDownload: () => void;
+  selectedIncStatuses: string[],
+  setSelectedIncStatuses: (newValues: string[]) => void,
+  selectedLocation: Location,
+  setSelectedLocation: (newValue: Location) => void,
+  selectedDomains: Domain[],
+  setSelectedDomains: (newValues: Domain[]) => void,
+  selectedCategories: Category[],
+  setSelectedCategories: (newValues: Category[]) => void,
+  showCsvUploadError: boolean,
+  showCsvUploadSuccess: boolean,
+}
+
+export const Sidebar = (props: SidebarProps) => {
   const uploadInputRef = useRef<HTMLInputElement>(null);
   const [localPath, setLocalPath] = useState<string>(DEFAULT_LOCAL_DIRECTORY);
 
   const [showCopied, setShowCopied] = useState(false);
-  const [showCsvUploadError, setShowCsvUploadError] = useState(false);
-  const [showCsvUploadSuccess, setShowCsvUploadSuccess] = useState(false);
 
   const handleUploadClick = () => {
     // Reset the input value to allow re-uploading the same file
     if (uploadInputRef.current) {
       uploadInputRef.current.value = "";
     }
-  };
-
-  const handleCsvUploadError = () => {
-    setShowCsvUploadError(true);
-    setTimeout(() => {
-      setShowCsvUploadError(false);
-    }, 3000);
-  };
-
-  const handleCsvUploadSuccess = () => {
-    setShowCsvUploadSuccess(true);
-    setTimeout(() => {
-      setShowCsvUploadSuccess(false);
-    }, 3000);
   };
 
   const handleCopyPath = () => {
@@ -63,23 +62,6 @@ export const Sidebar = () => {
       }, 3000);
     });
   };
-
-  const {
-    data,
-    handleCsvUpload,
-    handleCsvDownload,
-    selectedLocation,
-    setSelectedLocation,
-    selectedDomains,
-    setSelectedDomains,
-    selectedCategories,
-    setSelectedCategories,
-  } = useCapacitiesData({
-    handleCsvUploadError,
-    handleCsvUploadSuccess,
-  });
-
-  const hasData = data?.length > 0;
 
   return (
     <div className="p-4 py-8 w-full h-full flex flex-col gap-4">
@@ -121,7 +103,7 @@ export const Sidebar = () => {
           <VisuallyHiddenInput
             type="file"
             accept=".csv"
-            onChange={handleCsvUpload}
+            onChange={props.handleCsvUpload}
             ref={uploadInputRef}
           />
         </Button>
@@ -132,10 +114,10 @@ export const Sidebar = () => {
         {showCopied && (
           <Alert severity="success">Local file directory copied.</Alert>
         )}
-        {showCsvUploadSuccess && (
+        {props.showCsvUploadSuccess && (
           <Alert severity="success">Data upload successful.</Alert>
         )}
-        {showCsvUploadError && (
+        {props.showCsvUploadError && (
           <Alert severity="error">
             The uploaded file does not have the correct format.
           </Alert>
@@ -147,25 +129,33 @@ export const Sidebar = () => {
         <DropdownSelectBox
           title="Location"
           values={LOCATIONS as string[]}
-          selectedValue={selectedLocation as string}
+          selectedValue={props.selectedLocation as string}
           onChange={(newValue: string) => {
-            setSelectedLocation(newValue as Location);
+            props.setSelectedLocation(newValue as Location);
+          }}
+        />
+        <ButtonFilterBox
+          title="Domains"
+          values={["TRUE"]}
+          selectedValues={props.selectedIncStatuses}
+          onChange={(newValues: string[]) => {
+            props.setSelectedIncStatuses(newValues);
           }}
         />
         <ButtonFilterBox
           title="Domains"
           values={DOMAINS as string[]}
-          selectedValues={selectedDomains as string[]}
+          selectedValues={props.selectedDomains as string[]}
           onChange={(newValues: string[]) => {
-            setSelectedDomains(newValues as Domain[]);
+            props.setSelectedDomains(newValues as Domain[]);
           }}
         />
         <ButtonFilterBox
           title="Categories"
           values={CATEGORIES as string[]}
-          selectedValues={selectedCategories as string[]}
+          selectedValues={props.selectedCategories as string[]}
           onChange={(newValues: string[]) => {
-            setSelectedCategories(newValues as Category[]);
+            props.setSelectedCategories(newValues as Category[]);
           }}
         />
       </div>
@@ -177,8 +167,8 @@ export const Sidebar = () => {
         variant="contained"
         startIcon={<CloudDownloadIcon />}
         className="w-full"
-        onClick={handleCsvDownload}
-        disabled={!hasData}
+        onClick={props.handleCsvDownload}
+        disabled={!props.hasData}
       >
         Dump Data
       </Button>

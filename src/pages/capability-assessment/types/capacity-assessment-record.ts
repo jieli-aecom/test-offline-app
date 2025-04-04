@@ -171,7 +171,35 @@ export const CAPACITY_ASSESSMENT_KEYS: (keyof CapacityAssessmentRecord)[] =
   ];
 
 export const CAPACITY_ASSESSMENT_COMMON_KEYS: (keyof CapacityAssessmentRecord)[] =
-  ["Inc", "Domain", "Category", "Metric", "Measure", "Units"];
+  ["Domain", "Category", "Metric", "Measure", "Units"];
+
+export const PREFIX_BY_LOCATION: Record<Location, string> = {
+  [Location.NSRota]: "L01",
+  [Location.NSANaples]: "L02",
+  [Location.NASSigonella]: "L03",
+  [Location.NSASoudaBay]: "L04",
+  [Location.NSFDeveselu]: "L05",
+  [Location.NSFRedzikowo]: "L06",
+  [Location.Lossiemouth]: "L07",
+  [Location.Crombie]: "L08",
+  [Location.Keflavik]: "L09",
+  [Location.Grindavik]: "L10",
+  [Location.Evenes]: "L11",
+  [Location.Ramsund]: "L12",
+  [Location.USNSELisbon]: "L13",
+  [Location.USNSEMadrid]: "L14",
+  [Location.USNSEValencia]: "L15",
+  [Location.CampLDijbouti]: "L16",
+  [Location.AfricanCSLs]: "L17",
+  [Location.AfricanCL]: "L18",
+  [Location.NSABahrain]: "L19",
+  [Location.IsaAB]: "L20",
+  [Location.SaaAlNakhl]: "L21",
+  [Location.JebAllPort]: "L22",
+  [Location.FujairahPort]: "L23",
+  [Location.DuqumPort]: "L24",
+  [Location.MinhadAB]: "L25",
+}
 
 export const CAPACITY_ASSESSMENT_KEYS_BY_LOCATION: Record<
   Location,

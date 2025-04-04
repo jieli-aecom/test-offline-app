@@ -1,12 +1,14 @@
 import Papa from "papaparse";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   CapacityAssessmentRecord,
   CAPACITY_ASSESSMENT_KEYS,
-} from "../types/CapacityAssessementRecord";
+  PREFIX_BY_LOCATION,
+} from "../types/capacity-assessment-record";
 import { LOCATIONS, Location } from "../consts/locations";
 import { Domain } from "../consts/domains";
 import { Category } from "../consts/categories";
+import { CapacityAssessmentTableRow, Order } from "../types/table";
 
 export interface UseCapacitiesDataProps {
   handleCsvUploadError: () => void;
@@ -19,15 +21,150 @@ export const FILE_NAME = "capacities-data.csv";
 
 export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
   // Data
-  const [data, setData] = useState<CapacityAssessmentRecord[]>([]);
+  const rawData = useRef<CapacityAssessmentRecord[]>([]);
 
   // Filter states
   const [selectedLocation, setSelectedLocation] = useState<Location>(
     LOCATIONS[0]
   );
+  const [selectedIncStatuses, setSelectedIncStatuses] = useState<string[]>([]);
   const [selectedDomains, setSelectedDomains] = useState<Domain[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
+  // Data Derived states
+  const dataLength = rawData?.current?.length ?? 0;
+  const hasData = rawData?.current?.length > 0;
+  const locationPrefix = PREFIX_BY_LOCATION[selectedLocation];
+
+  // Given location prefix, we need to translate between the field
+  // of `CapacityAssessmentRecord` and `CapacityAssessmentTableRow`
+  const tableKeyToRecordKey = useCallback((key: string) => {
+    if (key === "Current") {
+      return `${locationPrefix}_Current` as keyof CapacityAssessmentRecord;
+    } else if (key === "CapSteady") {
+      return `${locationPrefix}_Cap-Steady` as keyof CapacityAssessmentRecord;
+    } else if (key === "CapContingency") {
+      return `${locationPrefix}_Cap-Contingency` as keyof CapacityAssessmentRecord;
+    } else {
+      return key as keyof CapacityAssessmentRecord;
+    }
+  }, [locationPrefix]);
+
+  const recordKeyToTableKey = useCallback((key: keyof CapacityAssessmentRecord) => {
+    if (key === `${locationPrefix}_Current`) {
+      return "Current";
+    } else if (key === `${locationPrefix}_Cap-Steady`) {
+      return "CapSteady";
+    } else if (key === `${locationPrefix}_Cap-Contingency`) {
+      return "CapContingency";
+    } else {
+      return key as string;
+    }
+  }, [locationPrefix]);
+
+
+  // Order states
+  const [order, setOrder] = useState<Order>("desc");
+  const [orderBy, setOrderBy] =
+    useState<keyof CapacityAssessmentRecord>("Category");
+
+  const setOrderByColId = (id: string) => {
+    // This method is exposed to the table
+    // The id here should be key of CapacityAssessmentTableRow
+    // But we need to convert it to key of CapacityAssessmentRecord
+    // to progress with the sorting
+    setOrderBy(tableKeyToRecordKey(id));
+  }
+  const orderByColId = useMemo(() => {
+    return recordKeyToTableKey(orderBy);
+  }, [orderBy, locationPrefix])
+
+  // Pagination states
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
+
+  // Table data: unpaginated
+  const [tableData, setTableData] = useState<CapacityAssessmentTableRow[]>([]);
+
+  // From raw data to table data, filtered, sorted, but not paginated
+  const produceTableData = useCallback(() => {
+    if (rawData?.current?.length === 0) return;
+    const filtered: CapacityAssessmentRecord[] = rawData.current.filter((record) => {
+      if (selectedIncStatuses?.length > 0 && record.Inc !== 1) {
+        return false;
+      }
+      if (
+        selectedDomains?.length > 0 &&
+        !selectedDomains?.includes(record.Domain as Domain)
+      ) {
+        return false;
+      }
+      if (
+        selectedCategories?.length > 0 &&
+        !selectedCategories?.includes(record.Category as Category)
+      ) {
+        return false;
+      }
+      return true;
+    });
+
+    const ordered = filtered.sort((a, b) => {
+      if (order === "desc") {
+        return (b[orderBy] ?? "") < (a[orderBy] ?? "") ? -1 : 1;
+      } else {
+        return (a[orderBy] ?? "") < (b[orderBy] ?? "") ? -1 : 1;
+      }
+    });
+
+    const tableViewData: CapacityAssessmentTableRow[] = ordered.map((entry) => {
+      return {
+        Id: entry.Id,
+        Selected: entry.Inc,
+        Domain: entry.Domain as Domain,
+        Category: entry.Category as Category,
+        Metric: entry.Metric,
+        Measure: entry.Measure,
+        Units: entry.Units,
+        Current: entry[`${locationPrefix}_Current` as keyof CapacityAssessmentRecord] as number ?? null,
+        CapSteady:
+          entry[`${locationPrefix}_Cap-Steady` as keyof CapacityAssessmentRecord] as number ??
+          null,
+        CapContingency:
+          entry[`${locationPrefix}_Cap-Contingency` as keyof CapacityAssessmentRecord] as number ??
+          null,
+      } as CapacityAssessmentTableRow;
+    })
+    setTableData(tableViewData);
+    // Reset pagination
+    setPage(0);
+  }, [
+    locationPrefix,
+    selectedIncStatuses,
+    selectedDomains,
+    selectedCategories,
+    orderBy,
+    order,
+    setPage,
+  ])
+  useEffect(() => {
+    produceTableData();
+  }, [
+    selectedLocation,
+    selectedIncStatuses,
+    selectedDomains,
+    selectedCategories,
+    orderBy,
+    order,
+  ]);
+
+  const tableView = useMemo(() => {
+    return tableData.slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage
+    );
+  }, [tableData, page, rowsPerPage]);
+
+  // CSV Upload/Download Handlers
   const handleCsvUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) {
@@ -55,16 +192,8 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
             (row: any, index) =>
               ({ ...row, Id: index } as CapacityAssessmentRecord)
           );
-          setData(parsedData);
-          console.log(
-            Array.from(
-              parsedData.reduce((acc, ent) => {
-                const category = ent.Category;
-                acc.add(category);
-                return acc;
-              }, new Set<string>())
-            )
-          );
+          rawData.current = parsedData;
+          produceTableData();
           props.handleCsvUploadSuccess();
         },
         error: (_: any, __: any) => {
@@ -80,7 +209,8 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
   };
 
   const handleCsvDownload = () => {
-    const csv: string = Papa.unparse(data, {
+    if (rawData?.current?.length === 0) return;
+    const csv: string = Papa.unparse(rawData?.current, {
       delimiter: ",",
       header: true,
       columns: CAPACITY_ASSESSMENT_KEYS,
@@ -98,14 +228,37 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
   };
 
   return {
-    data,
+    // Has Data?
+    hasData,
+    dataLength,
+
+    // Table View
+    tableView,
+
+    // Handlers for CSV upload/download result
     handleCsvUpload,
     handleCsvDownload,
+
+    // Filter states
+    selectedIncStatuses,
+    setSelectedIncStatuses,
     selectedLocation,
     setSelectedLocation,
     selectedDomains,
     setSelectedDomains,
     selectedCategories,
     setSelectedCategories,
+
+    // Ordering
+    order,
+    setOrder,
+    orderByColId,
+    setOrderByColId,
+
+    // Pagination
+    page,
+    setPage,
+    rowsPerPage,
+    setRowsPerPage,
   };
 };
