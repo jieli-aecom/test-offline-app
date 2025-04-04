@@ -28,6 +28,8 @@ export const DropdownSelectBox = (props: FilterBoxProps) => {
           value={props.selectedValue}
           label={props.title}
           onChange={handleChange}
+          onClick={(e) => e.stopPropagation()}
+          onFocus={(e) => e.stopPropagation()}
         >
           {props.values.map((value, index) => {
             return (

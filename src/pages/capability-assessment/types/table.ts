@@ -1,5 +1,5 @@
 import { AppTableRow, TableColumnDefinition } from "../../../components/app-table/types";
-import { Category } from "../consts/categories";
+import { CATEGORIES, Category } from "../consts/categories";
 import { Domain } from "../consts/domains";
 
 export interface CapacityAssessmentTableRow extends AppTableRow {
@@ -26,58 +26,60 @@ export const capacityAssessmentTableColumns: (keyof CapacityAssessmentTableRow)[
   "CapContingency",
 ];
 
-export const capacityAssessmentTableDefinitions: TableColumnDefinition[] = [
+export const capacityAssessmentTableDefinitions: TableColumnDefinition<CapacityAssessmentTableRow>[] = [
   {
-    id: "Domain",
+    id: "Domain" as keyof CapacityAssessmentTableRow,
     label: "Domain",
     numeric: false,
-    width: "8rem",
+    width: "5rem",
     editable: false,
   },
   {
-    id: "Category",
+    id: "Category" as keyof CapacityAssessmentTableRow,
     label: "Category",
     numeric: false,
-    width: "8rem",
-    editable: false,
+    width: "6rem",
+    editable: true,
+    dropdown: true,
+    dropdownOptions: CATEGORIES,
   },
   {
-    id: "Metric",
+    id: "Metric" as keyof CapacityAssessmentTableRow,
     label: "Metric",
     numeric: false,
     width: "12rem",
     editable: false,
   },
   {
-    id: "Measure",
+    id: "Measure" as keyof CapacityAssessmentTableRow,
     label: "Measure",
     numeric: false,
-    width: "8rem",
-    editable: false,
+    width: "15rem",
+    editable: true,
   },
   {
-    id: "Units",
+    id: "Units" as keyof CapacityAssessmentTableRow,
     label: "Units",
     numeric: false,
-    width: "5rem",
-    editable: false,
+    width: "8rem",
+    editable: true,
   },
   {
-    id: "Current",
+    id: "Current" as keyof CapacityAssessmentTableRow,
     label: "Current",
     numeric: true,
     width: "6rem",
     editable: true,
   },
   {
-    id: "CapSteady",
+    id: "CapSteady" as keyof CapacityAssessmentTableRow,
     label: "Cap-Steady",
     numeric: true,
     width: "5rem",
     editable: true,
   },
   {
-    id: "CapContingency",
+    id: "CapContingency" as keyof CapacityAssessmentTableRow,
     label: "Cap-Contingency",
     numeric: true,
     width: "5rem",

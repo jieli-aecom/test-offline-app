@@ -2,7 +2,8 @@ import TableCell from "@mui/material/TableCell";
 import { AppTableRow, TableColumnDefinition } from "./types";
 import { useEffect, useRef, useState } from "react";
 import { IconButton, Popover, TextField } from "@mui/material";
-import CheckIcon from '@mui/icons-material/Check';
+import CheckIcon from "@mui/icons-material/Check";
+import { DropdownSelectBox } from "../dropdown-select-box";
 
 export interface EnhancedTableCellProps<T extends AppTableRow> {
   def: TableColumnDefinition<T>;
@@ -55,6 +56,11 @@ export function EnhancedTableCell<T extends AppTableRow>(
     }
   };
 
+  const handleNewSelectedValue = (newSelected: string) => {
+    setNewValue(newSelected);
+    handleUpdate?.(newSelected);
+  };
+
   return (
     <>
       <TableCell
@@ -65,7 +71,7 @@ export function EnhancedTableCell<T extends AppTableRow>(
       >
         {def?.editable ? (
           <button
-            className="h-6 flex items-center justify-center"
+            className="min-h-6 flex items-center justify-center !px-2 !py-0 min-w-[1.5rem]"
             onClick={handlePopover}
           >
             {value}
@@ -86,29 +92,51 @@ export function EnhancedTableCell<T extends AppTableRow>(
           }}
           sx={{ padding: "1rem", height: "10rem" }}
         >
-          <div className="flex gap-2 w-[12rem] items-center p-2">
-            <TextField
-              id="edit-value"
-              label={def.label}
-              size="small"
-              inputRef={inputRef}
-              sx={{ fontSize: "0.9rem", width: "10rem", margin: "0.5rem" }}
-              value={newValue}
-              onChange={handleInputValue}
-              onFocus={(e) => e.stopPropagation()}
-              onClick={(e) => e.stopPropagation()}
-              autoFocus
-              variant="outlined"
-            />
-            <IconButton
-              onClick={(e) => {
-                e.stopPropagation();
-                handlePopoverClose();
-              }}
-              size="small">
+          {!def?.dropdown && (
+            <div className="flex gap-2 items-center p-2">
+              <TextField
+                id="edit-value"
+                label={def.label}
+                size="small"
+                inputRef={inputRef}
+                sx={{ fontSize: "0.9rem", width: def.width, margin: "0.5rem" }}
+                value={newValue}
+                onChange={handleInputValue}
+                onFocus={(e) => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
+                autoFocus
+                variant="outlined"
+              />
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePopoverClose();
+                }}
+                size="small"
+              >
                 <CheckIcon />
               </IconButton>
-          </div>
+            </div>
+          )}
+          {def?.dropdown && (def?.dropdownOptions ?? []).length > 0 && (
+            <div className="flex gap-2 items-end p-2">
+              <DropdownSelectBox
+                title={def.label}
+                values={def.dropdownOptions ?? []}
+                selectedValue={newValue as string}
+                onChange={handleNewSelectedValue}
+              />
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePopoverClose();
+                }}
+                size="small"
+              >
+                <CheckIcon />
+              </IconButton>
+            </div>
+          )}
         </Popover>
       )}
     </>
