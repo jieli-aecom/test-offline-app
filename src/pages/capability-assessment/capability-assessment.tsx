@@ -52,7 +52,7 @@ export const CapabilityAssessment = () => {
 
     // Table attribute update handler
     updateTableAttribute,
-    
+
   } = useCapacitiesData({
     handleCsvUploadError,
     handleCsvUploadSuccess,

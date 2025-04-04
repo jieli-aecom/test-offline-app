@@ -17,6 +17,8 @@ import { Domain } from "../consts/domains";
 import { Category } from "../consts/categories";
 import { CapacityAssessmentTableRow, Order } from "../types/table";
 
+const LOCAL_STORAGE_KEY = "capacities-data-regional-share-design";
+
 export interface UseCapacitiesDataProps {
   handleCsvUploadError: () => void;
   handleCsvUploadSuccess: () => void;
@@ -187,7 +189,17 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
     );
   }, [tableData, page, rowsPerPage]);
 
-  // CSV Upload/Download Handlers
+  // Load rawData from local storage
+  useEffect(() => {
+    const localData = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (localData) {
+      const parsed = JSON.parse(localData) as CapacityAssessmentRecord[];
+      rawData.current = parsed;
+      produceTableData();
+    }
+  })
+
+  // CSV Upload: populate rawData.current and produce table data
   const handleCsvUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) {
@@ -216,6 +228,11 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
               ({ ...row, Id: index } as CapacityAssessmentRecord) // Id field, same as index
           );
           rawData.current = parsedData;
+
+          // Save to local storage
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(parsedData));
+
+          // Produce table data (of type CapacityAssessmentTableRow[])
           produceTableData();
           props.handleCsvUploadSuccess();
         },
@@ -231,6 +248,7 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
     };
   };
 
+  // CSV Download: download rawData.current as CSV file
   const handleCsvDownload = () => {
     if (rawData?.current?.length === 0) return;
     const csv: string = Papa.unparse(rawData?.current, {
@@ -263,6 +281,9 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
       ...rawData.current[id],
       [recordKey]: value,
     }
+
+    // Update local storage
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(rawData.current));
     
     // Then, update the table data (view)
     const tableDataCopy = [...tableData];
