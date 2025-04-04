@@ -77,7 +77,7 @@ export const EnhancedTableCell = (props: EnhancedTableCellProps) => {
             id="edit-value"
             label={def.label}
             size="small"
-            sx={{ fontSize: "0.9rem", width: "5rem", margin: "0.5rem" }}
+            sx={{ fontSize: "0.9rem", width: "10rem", margin: "0.5rem" }}
             value={newValue}
             onChange={handleValueChange}
             autoFocus
