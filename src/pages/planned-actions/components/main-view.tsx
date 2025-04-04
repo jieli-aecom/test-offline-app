@@ -48,7 +48,7 @@ export function MainView(props: MainViewProps) {
   }
   return (
     <div className="w-full h-full flex flex-col overflow-auto gap-2 p-4">
-      <div className="w-[120rem] overflow-x-auto flex flex-col">
+      <div className="w-[115rem] overflow-x-auto flex flex-col">
         <div className="w-full pl-[14rem]">
           <EnhancedTable
             hasData={props.hasData}

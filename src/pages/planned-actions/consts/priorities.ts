@@ -11,7 +11,7 @@ export const PRIORITIES: Priority[] = [Priority.Low, Priority.Moderate, Priority
 export const COLOR_BY_PRIORITY: Record<Priority, string> = {
   [Priority.Low]: "#FFFF99",
   [Priority.Moderate]: "#83E28E",
-  [Priority.High]: "#B5E6A2",
+  [Priority.High]: "#F1A983",
   [Priority.ExtremelyHigh]: "#BE5014",
   [Priority.Exclude]: "#bbbbbb",
 };

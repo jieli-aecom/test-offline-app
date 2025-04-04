@@ -39,6 +39,9 @@ export const useActionsData = (props: useActionsDataProps) => {
   const [supportData, setSupportData] = useState<SupportRecord[]>([]);
   const [facilitiesData, setFacilitiesData] = useState<FacilitiesRecord[]>([]);
 
+  // Record CSV fields for dumping
+  const [csvFields, setCsvFields] = useState<string[]>([]);
+
   // Check local storage
   useEffect(() => {
     const storedPrioritiesData = localStorage.getItem(
@@ -96,13 +99,18 @@ export const useActionsData = (props: useActionsDataProps) => {
       Papa.parse(prioritiesText, {
         header: true,
         complete: (results) => {
+          const inputCsvFields = results?.meta?.fields ?? [];
           const formatCorrect = priorityFields.every((field) =>
-            results?.meta?.fields?.includes(field as string)
+            inputCsvFields?.includes(field as string)
           );
           if (!formatCorrect) {
             props.handleCsvUploadError();
             return;
           }
+
+          // Set csv fields for use in dumping
+          setCsvFields(inputCsvFields);
+
           const parsedData = results.data.map((row: any, index) => {
             return { ...row, Id: index, Selected: 0 } as PriorityRecord;
           });
@@ -207,17 +215,43 @@ export const useActionsData = (props: useActionsDataProps) => {
 
   // CSV Download: download rawData.current as CSV file
   const handleCsvDownload = () => {
-    return;
-    // const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    // const url = URL.createObjectURL(blob);
-    // const link = document.createElement("a");
+    if (!hasData) return;
+    if (!csvFields) return;
 
-    // link.href = url;
-    // link.setAttribute("download", FILE_NAME);
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
-    // URL.revokeObjectURL(url);
+    const csv1 = Papa.unparse(prioritiesData, {
+      delimiter: ",",
+      columns: csvFields,
+      header: true,
+    })
+
+    const csv2 = Papa.unparse(defenseData, {
+      delimiter: ",",
+      columns: csvFields,
+      header: true,
+    });
+
+    const csv3 = Papa.unparse(supportData, {
+      delimiter: ",",
+      columns: csvFields,
+      header: true,
+    });
+
+    const csv4 = Papa.unparse(facilitiesData, {
+      delimiter: ",",
+      columns: csvFields,
+      header: true,
+    });
+
+    const csv = `${csv1}\n${csv2}\n${csv3}\n${csv4}`;
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", FILE_NAME);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   // Data update handlers
