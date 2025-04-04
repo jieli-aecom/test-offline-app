@@ -1,6 +1,6 @@
 import TableCell from "@mui/material/TableCell";
 import { TableColumnDefinition } from "./types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Popover, TextField } from "@mui/material";
 
 export interface EnhancedTableCellProps {
@@ -16,6 +16,7 @@ export const EnhancedTableCell = (props: EnhancedTableCellProps) => {
   // Popover (container for editor)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const handlePopover = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
     if (def?.editable) {
       setAnchorEl(event.currentTarget);
     }
@@ -32,16 +33,22 @@ export const EnhancedTableCell = (props: EnhancedTableCellProps) => {
     setNewValue(value as number | string);
   }, [value]);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-    handleUpdate?.(newValue); // Call the update function with the new value
     if (def.numeric) {
-      const numberValue = parseFloat(newValue);
+      let numberValue = parseFloat(newValue);
       if (!isNaN(numberValue)) {
         setNewValue(numberValue);
+        handleUpdate?.(numberValue); 
+      } else {
+        setNewValue(value); // Reset to original value if invalid
+        handleUpdate?.(value);
       }
     } else {
       setNewValue(newValue);
+      handleUpdate?.(newValue);
     }
   };
 
@@ -77,9 +84,12 @@ export const EnhancedTableCell = (props: EnhancedTableCellProps) => {
             id="edit-value"
             label={def.label}
             size="small"
+            inputRef={inputRef}
             sx={{ fontSize: "0.9rem", width: "10rem", margin: "0.5rem" }}
             value={newValue}
             onChange={handleValueChange}
+            onFocus={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
             autoFocus
             variant="outlined"
           />
