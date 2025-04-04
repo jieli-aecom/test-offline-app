@@ -23,6 +23,7 @@ export interface EnhancedTableProps<T extends AppTableRow> {
   rowsPerPage?: number;
   setRowsPerPage?: (rowsPerPage: number) => void;
   hideFooter?: boolean; // Optional property to hide the footer
+  disableSelect?: boolean; // Optional property to disable the select checkbox
 }
 
 export function EnhancedTable<T extends AppTableRow>(props: EnhancedTableProps<T>) {
@@ -48,6 +49,7 @@ export function EnhancedTable<T extends AppTableRow>(props: EnhancedTableProps<T
     rowId: number, // rowId is the `Id` field of the row
     currentSelected: number // 0 or 1, 0 means not selected, 1 means selected
   ) => {
+    if(!props.disableSelect) return;
     const newSelected = currentSelected === 1 ? 0 : 1;
     props.handleUpdateTableAttribute(rowId, "Selected", newSelected);
   };
