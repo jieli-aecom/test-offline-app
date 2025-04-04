@@ -1,16 +1,19 @@
 import TableCell from "@mui/material/TableCell";
 import { AppTableRow, TableColumnDefinition } from "./types";
 import { useEffect, useRef, useState } from "react";
-import { Popover, TextField } from "@mui/material";
+import { IconButton, Popover, TextField } from "@mui/material";
+import CheckIcon from '@mui/icons-material/Check';
 
 export interface EnhancedTableCellProps<T extends AppTableRow> {
   def: TableColumnDefinition<T>;
   align: "left" | "right";
-  value: any; 
-  handleUpdate?: (value: any) => void; 
+  value: any;
+  handleUpdate?: (value: any) => void;
 }
 
-export function EnhancedTableCell<T extends AppTableRow> (props: EnhancedTableCellProps<T>) {
+export function EnhancedTableCell<T extends AppTableRow>(
+  props: EnhancedTableCellProps<T>
+) {
   const { def, align, value, handleUpdate } = props;
 
   // Popover (container for editor)
@@ -35,17 +38,17 @@ export function EnhancedTableCell<T extends AppTableRow> (props: EnhancedTableCe
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     if (def.numeric) {
       let numberValue = parseFloat(newValue);
       if (!isNaN(numberValue)) {
-        setNewValue(numberValue);
-        handleUpdate?.(numberValue); 
+        //
       } else {
-        setNewValue(value); // Reset to original value if invalid
-        handleUpdate?.(value);
+        numberValue = value; // Revert
       }
+      setNewValue(numberValue);
+      handleUpdate?.(numberValue);
     } else {
       setNewValue(newValue);
       handleUpdate?.(newValue);
@@ -61,7 +64,10 @@ export function EnhancedTableCell<T extends AppTableRow> (props: EnhancedTableCe
         sx={{ padding: "0.4rem", minWidth: def.width }}
       >
         {def?.editable ? (
-          <button className="h-6 flex items-center justify-center" onClick={handlePopover}>
+          <button
+            className="h-6 flex items-center justify-center"
+            onClick={handlePopover}
+          >
             {value}
           </button>
         ) : (
@@ -78,23 +84,33 @@ export function EnhancedTableCell<T extends AppTableRow> (props: EnhancedTableCe
             vertical: "bottom",
             horizontal: "left",
           }}
-          sx={{ padding: "0.5rem", height: "10rem"}}
+          sx={{ padding: "1rem", height: "10rem" }}
         >
-          <TextField
-            id="edit-value"
-            label={def.label}
-            size="small"
-            inputRef={inputRef}
-            sx={{ fontSize: "0.9rem", width: "10rem", margin: "0.5rem" }}
-            value={newValue}
-            onChange={handleValueChange}
-            onFocus={(e) => e.stopPropagation()}
-            onClick={(e) => e.stopPropagation()}
-            autoFocus
-            variant="outlined"
-          />
+          <div className="flex gap-2 w-[12rem] items-center p-2">
+            <TextField
+              id="edit-value"
+              label={def.label}
+              size="small"
+              inputRef={inputRef}
+              sx={{ fontSize: "0.9rem", width: "10rem", margin: "0.5rem" }}
+              value={newValue}
+              onChange={handleInputValue}
+              onFocus={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
+              autoFocus
+              variant="outlined"
+            />
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePopoverClose();
+              }}
+              size="small">
+                <CheckIcon />
+              </IconButton>
+          </div>
         </Popover>
       )}
     </>
   );
-};
+}
