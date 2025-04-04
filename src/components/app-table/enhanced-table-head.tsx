@@ -5,7 +5,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import { visuallyHidden } from "@mui/utils";
-import { capacityAssessmentTableDefinitions, Order } from "../types/table";
+import { Order } from "../../pages/capability-assessment/types/table";
+import { TableColumnDefinition } from "./types";
 
 interface Data {
   id: number;
@@ -20,6 +21,7 @@ export interface EnhancedTableHeadProps {
   onRequestSort: (event: MouseEvent<unknown>, property: string) => void;
   order: Order;
   orderBy: string;
+  columnDefinitions: TableColumnDefinition[];
 }
 
 export function EnhancedTableHead(props: EnhancedTableHeadProps) {
@@ -38,11 +40,11 @@ export function EnhancedTableHead(props: EnhancedTableHeadProps) {
       <TableRow>
         <TableCell padding="checkbox"  sx={{width: '2rem'}}>
         </TableCell>
-        {capacityAssessmentTableDefinitions.map((column) => (
+        {props.columnDefinitions.map((column) => (
           <TableCell
             key={column.id}
             width={column.width}
-            align={column.numeric ? "right" : "left"}
+            align={"left"}
             padding="none"
             sortDirection={orderBy === column.id ? order : false}
             sx={{padding: '0.4rem', minWidth: column.width}}

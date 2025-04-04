@@ -1,5 +1,12 @@
 import Papa from "papaparse";
-import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   CapacityAssessmentRecord,
   CAPACITY_ASSESSMENT_KEYS,
@@ -38,30 +45,39 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
 
   // Given location prefix, we need to translate between the field
   // of `CapacityAssessmentRecord` and `CapacityAssessmentTableRow`
-  const tableKeyToRecordKey = useCallback((key: string) => {
-    if (key === "Current") {
-      return `${locationPrefix}_Current` as keyof CapacityAssessmentRecord;
-    } else if (key === "CapSteady") {
-      return `${locationPrefix}_Cap-Steady` as keyof CapacityAssessmentRecord;
-    } else if (key === "CapContingency") {
-      return `${locationPrefix}_Cap-Contingency` as keyof CapacityAssessmentRecord;
-    } else {
-      return key as keyof CapacityAssessmentRecord;
-    }
-  }, [locationPrefix]);
+  const tableKeyToRecordKey = useCallback(
+    (key: string) => {
+      if (key === "Current") {
+        return `${locationPrefix}_Current` as keyof CapacityAssessmentRecord;
+      } else if (key === "CapSteady") {
+        return `${locationPrefix}_Cap-Steady` as keyof CapacityAssessmentRecord;
+      } else if (key === "CapContingency") {
+        return `${locationPrefix}_Cap-Contingency` as keyof CapacityAssessmentRecord;
+      } else if (key === "Selected") {
+        return "Inc" as keyof CapacityAssessmentRecord;
+      } {
+        return key as keyof CapacityAssessmentRecord;
+      }
+    },
+    [locationPrefix]
+  );
 
-  const recordKeyToTableKey = useCallback((key: keyof CapacityAssessmentRecord) => {
-    if (key === `${locationPrefix}_Current`) {
-      return "Current";
-    } else if (key === `${locationPrefix}_Cap-Steady`) {
-      return "CapSteady";
-    } else if (key === `${locationPrefix}_Cap-Contingency`) {
-      return "CapContingency";
-    } else {
-      return key as string;
-    }
-  }, [locationPrefix]);
-
+  const recordKeyToTableKey = useCallback(
+    (key: keyof CapacityAssessmentRecord) => {
+      if (key === `${locationPrefix}_Current`) {
+        return "Current";
+      } else if (key === `${locationPrefix}_Cap-Steady`) {
+        return "CapSteady";
+      } else if (key === `${locationPrefix}_Cap-Contingency`) {
+        return "CapContingency";
+      } else if (key === "Inc") {
+        return "Selected";
+      } else {
+        return key as string;
+      }
+    },
+    [locationPrefix]
+  );
 
   // Order states
   const [order, setOrder] = useState<Order>("desc");
@@ -74,10 +90,10 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
     // But we need to convert it to key of CapacityAssessmentRecord
     // to progress with the sorting
     setOrderBy(tableKeyToRecordKey(id));
-  }
+  };
   const orderByColId = useMemo(() => {
     return recordKeyToTableKey(orderBy);
-  }, [orderBy, locationPrefix])
+  }, [orderBy, locationPrefix]);
 
   // Pagination states
   const [page, setPage] = useState(0);
@@ -89,24 +105,26 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
   // From raw data to table data, filtered, sorted, but not paginated
   const produceTableData = useCallback(() => {
     if (rawData?.current?.length === 0) return;
-    const filtered: CapacityAssessmentRecord[] = rawData.current.filter((record) => {
-      if (selectedIncStatuses?.length > 0 && record.Inc !== 1) {
-        return false;
+    const filtered: CapacityAssessmentRecord[] = rawData.current.filter(
+      (record) => {
+        if (selectedIncStatuses?.length > 0 && record.Inc !== 1) {
+          return false;
+        }
+        if (
+          selectedDomains?.length > 0 &&
+          !selectedDomains?.includes(record.Domain as Domain)
+        ) {
+          return false;
+        }
+        if (
+          selectedCategories?.length > 0 &&
+          !selectedCategories?.includes(record.Category as Category)
+        ) {
+          return false;
+        }
+        return true;
       }
-      if (
-        selectedDomains?.length > 0 &&
-        !selectedDomains?.includes(record.Domain as Domain)
-      ) {
-        return false;
-      }
-      if (
-        selectedCategories?.length > 0 &&
-        !selectedCategories?.includes(record.Category as Category)
-      ) {
-        return false;
-      }
-      return true;
-    });
+    );
 
     const ordered = filtered.sort((a, b) => {
       if (order === "desc") {
@@ -125,15 +143,20 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
         Metric: entry.Metric,
         Measure: entry.Measure,
         Units: entry.Units,
-        Current: entry[`${locationPrefix}_Current` as keyof CapacityAssessmentRecord] as number ?? null,
+        Current:
+          (entry[
+            `${locationPrefix}_Current` as keyof CapacityAssessmentRecord
+          ] as number) ?? null,
         CapSteady:
-          entry[`${locationPrefix}_Cap-Steady` as keyof CapacityAssessmentRecord] as number ??
-          null,
+          (entry[
+            `${locationPrefix}_Cap-Steady` as keyof CapacityAssessmentRecord
+          ] as number) ?? null,
         CapContingency:
-          entry[`${locationPrefix}_Cap-Contingency` as keyof CapacityAssessmentRecord] as number ??
-          null,
+          (entry[
+            `${locationPrefix}_Cap-Contingency` as keyof CapacityAssessmentRecord
+          ] as number) ?? null,
       } as CapacityAssessmentTableRow;
-    })
+    });
     setTableData(tableViewData);
     // Reset pagination
     setPage(0);
@@ -145,7 +168,7 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
     orderBy,
     order,
     setPage,
-  ])
+  ]);
   useEffect(() => {
     produceTableData();
   }, [
@@ -190,7 +213,7 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
           }
           const parsedData = results.data.map(
             (row: any, index) =>
-              ({ ...row, Id: index } as CapacityAssessmentRecord)
+              ({ ...row, Id: index } as CapacityAssessmentRecord) // Id field, same as index
           );
           rawData.current = parsedData;
           produceTableData();
@@ -227,6 +250,35 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
     URL.revokeObjectURL(url);
   };
 
+  const handleUpdateTableAttribute = (id: number, colId: string, value: any) => {
+    // First update ref
+    // Note id should be the same as the array indesx of `rawData.current`
+    // Mutate the raw data
+    
+    // Translate column name to record key
+    const recordKey = tableKeyToRecordKey(colId);
+
+    // Mutate raw data
+    rawData.current[id] = {
+      ...rawData.current[id],
+      [recordKey]: value,
+    }
+    
+    // Then, update the table data (view)
+    const tableDataCopy = [...tableData];
+    const tableRowIndex = tableDataCopy.findIndex((row) => row.Id === id);
+    if (tableRowIndex !== -1) {
+      tableDataCopy[tableRowIndex] = {
+        ...tableDataCopy[tableRowIndex],
+        [colId]: value,
+      };
+      setTableData(tableDataCopy);
+    }
+
+    // Then, `tableView` will be updated automatically
+    // because it is derived from `tableData` and `page` and `rowsPerPage`
+  }
+
   return {
     // Has Data?
     hasData,
@@ -260,5 +312,8 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
     setPage,
     rowsPerPage,
     setRowsPerPage,
+
+    // Handler to update table attribute
+    updateTableAttribute: handleUpdateTableAttribute,
   };
 };

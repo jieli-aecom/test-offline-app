@@ -2,7 +2,7 @@ import { useState } from "react";
 import { SidebarLayout } from "../../components/sidebar-layout";
 import { Sidebar } from "./components/sidebar";
 import { useCapacitiesData } from "./hooks/use-capacities-data";
-import { DataViewArea } from "./components/data-view-area";
+import { DataViewArea } from "../../components/app-table/app-table";
 import {  capacityAssessmentTableDefinitions } from "./types/table";
 
 export const CapabilityAssessment = () => {
@@ -49,6 +49,9 @@ export const CapabilityAssessment = () => {
     setPage,
     rowsPerPage,
     setRowsPerPage,
+
+    // Table attribute update handler
+    updateTableAttribute,
   } = useCapacitiesData({
     handleCsvUploadError,
     handleCsvUploadSuccess,
@@ -87,6 +90,7 @@ export const CapabilityAssessment = () => {
           setPage={setPage}
           rowsPerPage={rowsPerPage}
           setRowsPerPage={setRowsPerPage}
+          handleUpdateTableAttribute={updateTableAttribute}
         />
       }
     />
