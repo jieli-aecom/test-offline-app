@@ -3,6 +3,7 @@ export enum Priority {
   Moderate = "Moderate",
   High = "High",
   ExtremelyHigh = "Extremely High",
+  Exclude = "Exclude",
 }
 
 export const PRIORITIES: Priority[] = [Priority.Low, Priority.Moderate, Priority.High, Priority.ExtremelyHigh];
@@ -12,4 +13,5 @@ export const COLOR_BY_PRIORITY: Record<Priority, string> = {
   [Priority.Moderate]: "#83E28E",
   [Priority.High]: "#B5E6A2",
   [Priority.ExtremelyHigh]: "#BE5014",
+  [Priority.Exclude]: "#bbbbbb",
 };

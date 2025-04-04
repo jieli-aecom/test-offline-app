@@ -2,6 +2,7 @@ import { useState } from "react";
 import { SidebarLayout } from "../../components/sidebar-layout";
 import { Sidebar } from "./components/sidebar";
 import { useActionsData } from "./hooks/use-actions-data";
+import { MainView } from "./components/main-view";
 
 export const PlannedActions = () => {
   const [showCsvUploadError, setShowCsvUploadError] = useState(false);
@@ -20,7 +21,19 @@ export const PlannedActions = () => {
     }, 3000);
   };
 
-  const { handleCsvUpload, handleCsvDownload } = useActionsData({
+  const {
+    hasData,
+    prioritiesData,
+    defenseData,
+    supportData,
+    facilitiesData,
+    handlePriorityDataUpdate,
+    handleDefenseDataUpdate,
+    handleSupportDataUpdate,
+    handleFacilitiesDataUpdate,
+    handleCsvUpload,
+    handleCsvDownload,
+  } = useActionsData({
     handleCsvUploadError,
     handleCsvUploadSuccess,
   });
@@ -28,14 +41,26 @@ export const PlannedActions = () => {
     <SidebarLayout
       sidebarContent={
         <Sidebar
-          hasData={false}
+          hasData={hasData}
           handleCsvUpload={handleCsvUpload}
           handleCsvDownload={handleCsvDownload}
           showCsvUploadError={showCsvUploadError}
           showCsvUploadSuccess={showCsvUploadSuccess}
         />
       }
-      mainContent={<div>Main Content</div>}
+      mainContent={
+        <MainView
+          hasData={hasData}
+          priorityData={prioritiesData}
+          defenseData={defenseData}
+          supportData={supportData}
+          facilitiesData={facilitiesData}
+          handleUpdatePriorityData={handlePriorityDataUpdate}
+          handleUpdateDefenseData={handleDefenseDataUpdate}
+          handleUpdateSupportData={handleSupportDataUpdate}
+          handleUpdateFacilitiesData={handleFacilitiesDataUpdate}
+        />
+      }
     ></SidebarLayout>
   );
 };

@@ -46,6 +46,7 @@ export function MainView(props: MainViewProps) {
         rowsPerPage={props.rowsPerPage}
         setRowsPerPage={props.setRowsPerPage}
         handleUpdateTableAttribute={props.handleUpdateTableAttribute}
+        hideFooter={false}
       />
     </div>
   );

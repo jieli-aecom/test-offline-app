@@ -10,6 +10,7 @@ export interface EnhancedTableCellProps<T extends AppTableRow> {
   align: "left" | "right";
   value: any;
   handleUpdate?: (value: any) => void;
+  color?: (value: any) => string;
 }
 
 export function EnhancedTableCell<T extends AppTableRow>(
@@ -61,6 +62,8 @@ export function EnhancedTableCell<T extends AppTableRow>(
     handleUpdate?.(newSelected);
   };
 
+  const color = props.color?.(props.value) ?? "#ffffff";
+
   return (
     <>
       <TableCell
@@ -71,13 +74,16 @@ export function EnhancedTableCell<T extends AppTableRow>(
       >
         {def?.editable ? (
           <button
-            className="min-h-6 flex items-center justify-center !px-2 !py-0 min-w-[1.5rem]"
+            style={{ backgroundColor: color }}
+            className="min-h-6 flex items-center justify-left text-left !px-2 !py-0 min-w-[1.5rem]"
             onClick={handlePopover}
           >
             {value}
           </button>
         ) : (
-          <span>{value}</span>
+          <span className="px-1" style={{ backgroundColor: color }}>
+            {value}
+          </span>
         )}
       </TableCell>
       {def?.editable && (

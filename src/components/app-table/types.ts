@@ -8,6 +8,8 @@ export type TableColumnDefinition<T extends AppTableRow> = {
   editable?: boolean; // Optional property to indicate if the column is editable
   dropdown?: boolean; // Optional property to indicate if the column is a dropdown editor
   dropdownOptions?: string[]; // Optional property to specify the options for the dropdown editor
+
+  color?: (value: any) => string; // Optional property to specify the color of the cell based on its value
 }
 
 export interface AppTableRow {

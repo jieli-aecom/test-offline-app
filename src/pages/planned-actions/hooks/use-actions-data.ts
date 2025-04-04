@@ -41,10 +41,10 @@ export const useActionsData = (props: useActionsDataProps) => {
   const [supportData, setSupportData] = useState<SupportRecord[]>([]);
   const [facilitiesData, setFacilitiesData] = useState<FacilitiesRecord[]>([]);
 
-  console.log("prioritiesData", prioritiesData);
-  console.log("defenseData", defenseData);
-  console.log("supportData", supportData);
-  console.log("facilitiesData", facilitiesData);
+  // console.log("prioritiesData", prioritiesData);
+  // console.log("defenseData", defenseData);
+  // console.log("supportData", supportData);
+  // console.log("facilitiesData", facilitiesData);
 
   const hasData = useMemo(() => {
     return (
@@ -153,6 +153,7 @@ export const useActionsData = (props: useActionsDataProps) => {
       const facilitiesText = lines.slice(25).join("\n");
       Papa.parse(facilitiesText, {
         header: true,
+        skipEmptyLines: true,
         complete: (results) => {
           const formatCorrect = actionFields.every((field) =>
             results.meta.fields?.includes(field as string)

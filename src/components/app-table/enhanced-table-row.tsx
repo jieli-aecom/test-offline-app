@@ -7,11 +7,14 @@ import { EnhancedTableCell } from "./enhanced-table-cell";
 export interface EnhancedTableRowProps<T extends AppTableRow> {
   row: AppTableRow;
   columnDefinitions: TableColumnDefinition<T>[];
-  handleSelect: (currentSelected: number) => void; 
+  handleSelect: (currentSelected: number) => void;
   handleUpdateTableAttribute: (key: keyof T, value: number | string) => void;
+  disableSelect?: boolean; // Optional property to disable the select checkbox
 }
 
-export function EnhancedTableRow<T extends AppTableRow> (props: EnhancedTableRowProps<T>) {
+export function EnhancedTableRow<T extends AppTableRow>(
+  props: EnhancedTableRowProps<T>
+) {
   const { row, handleSelect, columnDefinitions, handleUpdateTableAttribute } =
     props;
   return (
@@ -25,13 +28,15 @@ export function EnhancedTableRow<T extends AppTableRow> (props: EnhancedTableRow
       selected={row.Selected === 1}
       sx={{ cursor: "pointer" }}
     >
-      <TableCell padding="checkbox">
-        <Checkbox
-          color="primary"
-          checked={row.Selected === 1}
-          sx={{ width: "2rem" }}
-        />
-      </TableCell>
+      {!props?.disableSelect === true && (
+        <TableCell padding="checkbox">
+          <Checkbox
+            color="primary"
+            checked={row.Selected === 1}
+            sx={{ width: "2rem" }}
+          />
+        </TableCell>
+      )}
       {columnDefinitions?.map((def) => (
         <EnhancedTableCell
           key={def.id as string}
@@ -41,8 +46,9 @@ export function EnhancedTableRow<T extends AppTableRow> (props: EnhancedTableRow
           handleUpdate={(value) => {
             handleUpdateTableAttribute(def.id, value);
           }}
+          color={def?.color ?? undefined}
         />
       ))}
     </TableRow>
   );
-};
+}
