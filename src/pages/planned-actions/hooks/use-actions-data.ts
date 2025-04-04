@@ -7,12 +7,23 @@ import {
   useRef,
   useState,
 } from "react";
-import { actionFields, DefenseRecord, FacilitiesRecord, priorityFields, PriorityRecord, SupportRecord } from "../types/records";
+import {
+  actionFields,
+  DefenseRecord,
+  FacilitiesRecord,
+  priorityFields,
+  PriorityRecord,
+  SupportRecord,
+} from "../types/records";
 
-const PRIORITY_DATA_LOCAL_STORAGE_KEY = "actions-data-priority-regional-share-design";
-const DEFENSE_DATA_LOCAL_STORAGE_KEY = "actions-data-defense-regional-share-design";
-const SUPPORT_DATA_LOCAL_STORAGE_KEY = "actions-data-support-regional-share-design";
-const FACILITIES_DATA_LOCAL_STORAGE_KEY = "actions-data-facilities-regional-share-design";
+const PRIORITY_DATA_LOCAL_STORAGE_KEY =
+  "actions-data-priority-regional-share-design";
+const DEFENSE_DATA_LOCAL_STORAGE_KEY =
+  "actions-data-defense-regional-share-design";
+const SUPPORT_DATA_LOCAL_STORAGE_KEY =
+  "actions-data-support-regional-share-design";
+const FACILITIES_DATA_LOCAL_STORAGE_KEY =
+  "actions-data-facilities-regional-share-design";
 
 export interface useActionsDataProps {
   handleCsvUploadError: () => void;
@@ -24,7 +35,6 @@ export const DEFAULT_LOCAL_DIRECTORY =
 export const FILE_NAME = "actions-data.csv";
 
 export const useActionsData = (props: useActionsDataProps) => {
-
   // Four pieces of raw data
   const [prioritiesData, setPrioritiesData] = useState<PriorityRecord[]>([]);
   const [defenseData, setDefenseData] = useState<DefenseRecord[]>([]);
@@ -36,6 +46,14 @@ export const useActionsData = (props: useActionsDataProps) => {
   console.log("supportData", supportData);
   console.log("facilitiesData", facilitiesData);
 
+  const hasData = useMemo(() => {
+    return (
+      prioritiesData?.length > 0 &&
+      defenseData?.length > 0 &&
+      supportData?.length > 0 &&
+      facilitiesData?.length > 0
+    );
+  }, [prioritiesData, defenseData, supportData, facilitiesData]);
 
   // CSV Upload: populate rawData.current and produce table data
   const handleCsvUpload = (event: ChangeEvent<HTMLInputElement>) => {
@@ -56,16 +74,21 @@ export const useActionsData = (props: useActionsDataProps) => {
       Papa.parse(prioritiesText, {
         header: true,
         complete: (results) => {
-          const formatCorrect = priorityFields.every((field) => results?.meta?.fields?.includes(field as string));
+          const formatCorrect = priorityFields.every((field) =>
+            results?.meta?.fields?.includes(field as string)
+          );
           if (!formatCorrect) {
             props.handleCsvUploadError();
             return;
           }
           const parsedData = results.data.map((row: any, index) => {
-            return {...row, Id: index, Selected: 0} as PriorityRecord;
-          })
+            return { ...row, Id: index, Selected: 0 } as PriorityRecord;
+          });
           setPrioritiesData(parsedData);
-          localStorage.setItem(PRIORITY_DATA_LOCAL_STORAGE_KEY, JSON.stringify(parsedData));
+          localStorage.setItem(
+            PRIORITY_DATA_LOCAL_STORAGE_KEY,
+            JSON.stringify(parsedData)
+          );
           props.handleCsvUploadSuccess();
         },
         error: (_: any, __: any) => {
@@ -79,16 +102,21 @@ export const useActionsData = (props: useActionsDataProps) => {
       Papa.parse(defenseText, {
         header: true,
         complete: (results) => {
-          const formatCorrect = actionFields.every((field) => results.meta.fields?.includes(field as string));
+          const formatCorrect = actionFields.every((field) =>
+            results.meta.fields?.includes(field as string)
+          );
           if (!formatCorrect) {
             props.handleCsvUploadError();
             return;
           }
           const parsedData = results.data.map((row: any, index) => {
-            return {...row, Id: index, Selected: 0} as DefenseRecord;
-          })
+            return { ...row, Id: index, Selected: 0 } as DefenseRecord;
+          });
           setDefenseData(parsedData);
-          localStorage.setItem(DEFENSE_DATA_LOCAL_STORAGE_KEY, JSON.stringify(parsedData));
+          localStorage.setItem(
+            DEFENSE_DATA_LOCAL_STORAGE_KEY,
+            JSON.stringify(parsedData)
+          );
         },
         error: (_: any, __: any) => {
           props.handleCsvUploadError();
@@ -100,37 +128,47 @@ export const useActionsData = (props: useActionsDataProps) => {
       Papa.parse(supportText, {
         header: true,
         complete: (results) => {
-          const formatCorrect = actionFields.every((field) => results.meta.fields?.includes(field as string));
+          const formatCorrect = actionFields.every((field) =>
+            results.meta.fields?.includes(field as string)
+          );
           if (!formatCorrect) {
             props.handleCsvUploadError();
             return;
           }
           const parsedData = results.data.map((row: any, index) => {
-            return {...row, Id: index, Selected: 0} as SupportRecord;
-          })
+            return { ...row, Id: index, Selected: 0 } as SupportRecord;
+          });
           setSupportData(parsedData);
-          localStorage.setItem(SUPPORT_DATA_LOCAL_STORAGE_KEY, JSON.stringify(parsedData));
+          localStorage.setItem(
+            SUPPORT_DATA_LOCAL_STORAGE_KEY,
+            JSON.stringify(parsedData)
+          );
         },
         error: (_: any, __: any) => {
           props.handleCsvUploadError();
         },
-      })
+      });
 
       // Remaining lines
       const facilitiesText = lines.slice(25).join("\n");
       Papa.parse(facilitiesText, {
         header: true,
         complete: (results) => {
-          const formatCorrect = actionFields.every((field) => results.meta.fields?.includes(field as string));
+          const formatCorrect = actionFields.every((field) =>
+            results.meta.fields?.includes(field as string)
+          );
           if (!formatCorrect) {
             props.handleCsvUploadError();
             return;
           }
           const parsedData = results.data.map((row: any, index) => {
-            return {...row, Id: index, Selected: 0} as FacilitiesRecord;
-          })
+            return { ...row, Id: index, Selected: 0 } as FacilitiesRecord;
+          });
           setFacilitiesData(parsedData);
-          localStorage.setItem(FACILITIES_DATA_LOCAL_STORAGE_KEY, JSON.stringify(parsedData));
+          localStorage.setItem(
+            FACILITIES_DATA_LOCAL_STORAGE_KEY,
+            JSON.stringify(parsedData)
+          );
         },
         error: (_: any, __: any) => {
           props.handleCsvUploadError();
@@ -159,7 +197,47 @@ export const useActionsData = (props: useActionsDataProps) => {
     // URL.revokeObjectURL(url);
   };
 
+  // Data update handlers
+  const handlePriorityDataUpdate = (id: number, key: keyof PriorityRecord, value: any) => {
+    setPrioritiesData((prevData) =>
+      prevData.map((row) => (row.Id === id ? { ...row, [key]: value } : row))
+    );
+  }
+
+  const handleDefenseDataUpdate = (id: number, key: keyof DefenseRecord, value: any) => {
+    setDefenseData((prevData) =>
+      prevData.map((row) => (row.Id === id ? { ...row, [key]: value } : row))
+    );
+  }
+
+  const handleSupportDataUpdate = (id: number, key: keyof SupportRecord, value: any) => {
+    setSupportData((prevData) =>
+      prevData.map((row) => (row.Id === id ? { ...row, [key]: value } : row))
+    );
+  }
+
+  const handleFacilitiesDataUpdate = (id: number, key: keyof FacilitiesRecord, value: any) => {
+    setFacilitiesData((prevData) =>
+      prevData.map((row) => (row.Id === id ? { ...row, [key]: value } : row))
+    );
+  }
+
   return {
+    // Data status
+    hasData,
+
+    // Data
+    prioritiesData,
+    defenseData,
+    supportData,
+    facilitiesData,
+
+    // Data update handlers
+    handlePriorityDataUpdate,
+    handleDefenseDataUpdate,
+    handleSupportDataUpdate,
+    handleFacilitiesDataUpdate,
+
     // Handlers for CSV upload/download result
     handleCsvUpload,
     handleCsvDownload,

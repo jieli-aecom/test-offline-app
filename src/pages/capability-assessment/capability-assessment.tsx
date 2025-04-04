@@ -2,8 +2,8 @@ import { useState } from "react";
 import { SidebarLayout } from "../../components/sidebar-layout";
 import { Sidebar } from "./components/sidebar";
 import { useCapacitiesData } from "./hooks/use-capacities-data";
-import { EnhancedTable } from "../../components/app-table/enhanced-table";
-import {  capacityAssessmentTableDefinitions } from "./types/table";
+import { capacityAssessmentTableDefinitions } from "./types/table";
+import { MainView } from "./components/main-view";
 
 export const CapabilityAssessment = () => {
   const [showCsvUploadError, setShowCsvUploadError] = useState(false);
@@ -52,7 +52,6 @@ export const CapabilityAssessment = () => {
 
     // Table attribute update handler
     updateTableAttribute,
-
   } = useCapacitiesData({
     handleCsvUploadError,
     handleCsvUploadSuccess,
@@ -78,20 +77,20 @@ export const CapabilityAssessment = () => {
         />
       }
       mainContent={
-        <EnhancedTable
-          hasData={hasData}
-          dataLength={dataLength}
-          tableView={tableView}
-          columnDefinitions={capacityAssessmentTableDefinitions}
-          order={order}
-          setOrder={setOrder}
-          orderBy={orderByColId}
-          setOrderBy={setOrderByColId}
-          page={page}
-          setPage={setPage}
-          rowsPerPage={rowsPerPage}
-          setRowsPerPage={setRowsPerPage}
-          handleUpdateTableAttribute={updateTableAttribute}
+        <MainView 
+        hasData={hasData}
+        dataLength={dataLength}
+        tableView={tableView}
+        columnDefinitions={capacityAssessmentTableDefinitions}
+        order={order}
+        setOrder={setOrder}
+        orderBy={orderByColId}
+        setOrderBy={setOrderByColId}
+        page={page}
+        setPage={setPage}
+        rowsPerPage={rowsPerPage}
+        setRowsPerPage={setRowsPerPage}
+        handleUpdateTableAttribute={updateTableAttribute}
         />
       }
     />

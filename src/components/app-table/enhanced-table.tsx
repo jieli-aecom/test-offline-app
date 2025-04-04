@@ -54,9 +54,11 @@ export function EnhancedTable<T extends AppTableRow>(props: EnhancedTableProps<T
     props.handleUpdateTableAttribute(rowId, "Selected", newSelected);
   };
 
+  const tableHeightClass = props.hideFooter ? "h-[100%]" : "h-[90%]";
+
   return (
-    <div className="w-full h-full flex flex-col items-center">
-      <div className="w-full h-[90%] overflow-y-auto overflow-x-auto">
+    <>
+      <div className={`w-full ${tableHeightClass} overflow-y-auto overflow-x-auto`}>
         <TableContainer>
           <Table
             // sx={{ minWidth: 750 }}
@@ -101,6 +103,6 @@ export function EnhancedTable<T extends AppTableRow>(props: EnhancedTableProps<T
           />
         )}
       </div>
-    </div>
+    </>
   );
 };
