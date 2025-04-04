@@ -25,7 +25,7 @@ export interface UseCapacitiesDataProps {
 }
 
 export const DEFAULT_LOCAL_DIRECTORY =
-  "C:/offline-app/sample-data/";
+  "C:/app-example/sample-data/";
 export const FILE_NAME = "capacities-data.csv";
 
 export const useCapacitiesData = (props: UseCapacitiesDataProps) => {

@@ -1,0 +1,38 @@
+Item,Priority,NS Rota,NSA Naples,NAS Sigonella,NSA Souda Bay,NSF Deveselu,NSF Redzikowo,Lossiemouth,Crombie,Keflavik,Grindavik,Evenes,Ramsund
+,,Extremely High,High,Moderate,Low,Low,Low,Exclude,Low,Low,Low,Low,Low
+Item,Priority,NS Rota,NSA Naples,NAS Sigonella,NSA Souda Bay,NSF Deveselu,NSF Redzikowo,Lossiemouth,Crombie,Keflavik,Grindavik,Evenes,Ramsund
+Aircraft,High,Move From,Surge,Keep Steady,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Air Operations,High,Undefined,Surge,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Ships,Moderate,Undefined,Surge,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Subs,Low,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Port Operations,Moderate,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Weapons,High,Undefined,Surge,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Munitions,Exclude,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Cyber/IT,Moderate,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Forces,Low,Undefined,Surge,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Item,Priority,NS Rota,NSA Naples,NAS Sigonella,NSA Souda Bay,NSF Deveselu,NSF Redzikowo,Lossiemouth,Crombie,Keflavik,Grindavik,Evenes,Ramsund
+Personnell (Admin),Low,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Berthing,High,Undefined,Add Capacity,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Logistics,High,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Fuel,High,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Laydown,Low,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Medical,Low,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Food & Water,Low,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Waste,Low,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Utilities,High,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Maintenance,Moderate,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Messing / Gym,Low,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Vehicles,Low,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Item,Priority,NS Rota,NSA Naples,NAS Sigonella,NSA Souda Bay,NSF Deveselu,NSF Redzikowo,Lossiemouth,Crombie,Keflavik,Grindavik,Evenes,Ramsund
+Airfield Ops,High,Undefined,Renovate,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Expeditionary Ops,Low,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Ordance Weapons Ops,Low,Undefined,Build New,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Waterfront Ops,Moderate,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+C5ISR Ops,High,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Logistics & Supply,High,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+RDT&E,Low,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Sailor & Family Readiness,Low,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Training,Moderate,Undefined,Build New,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Utilities,High,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Inter/Depot Level Maintenance,Low,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
+Base Support,Moderate,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined

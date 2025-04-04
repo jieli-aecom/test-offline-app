@@ -62,7 +62,7 @@ export function EnhancedTableCell<T extends AppTableRow>(
     handleUpdate?.(newSelected);
   };
 
-  const color = props.color?.(props.value) ?? "#ffffff";
+  const color = props.color?.(props.value) ?? "rgba(0, 0, 0, 0)";
 
   return (
     <>

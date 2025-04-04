@@ -1,0 +1,16 @@
+export const CSV_FIELDS = [
+  "Item",
+  "Priority",
+  "NS Rota",
+  "NSA Naples",
+  "NAS Sigonella",
+  "NSA Souda Bay",
+  "NSF Deveselu",
+  "NSF Redzikowo",
+  "Lossiemouth",
+  "Crombie",
+  "Keflavik",
+  "Grindavik",
+  "Evenes",
+  "Ramsund",
+];

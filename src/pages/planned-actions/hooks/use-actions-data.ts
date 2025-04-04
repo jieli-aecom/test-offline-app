@@ -13,6 +13,7 @@ import {
   PriorityRecord,
   SupportRecord,
 } from "../types/records";
+import { CSV_FIELDS } from "../types/csv-fields";
 
 const PRIORITY_DATA_LOCAL_STORAGE_KEY =
   "actions-data-priority-regional-share-design";
@@ -29,7 +30,7 @@ export interface useActionsDataProps {
 }
 
 export const DEFAULT_LOCAL_DIRECTORY =
-  "C:/offline-app/sample-data/";
+  "C:/app-example/sample-data/";
 export const FILE_NAME = "actions-data.csv";
 
 export const useActionsData = (props: useActionsDataProps) => {
@@ -38,9 +39,6 @@ export const useActionsData = (props: useActionsDataProps) => {
   const [defenseData, setDefenseData] = useState<DefenseRecord[]>([]);
   const [supportData, setSupportData] = useState<SupportRecord[]>([]);
   const [facilitiesData, setFacilitiesData] = useState<FacilitiesRecord[]>([]);
-
-  // Record CSV fields for dumping
-  const [csvFields, setCsvFields] = useState<string[]>([]);
 
   // Check local storage
   useEffect(() => {
@@ -109,7 +107,6 @@ export const useActionsData = (props: useActionsDataProps) => {
           }
 
           // Set csv fields for use in dumping
-          setCsvFields(inputCsvFields);
 
           const parsedData = results.data.map((row: any, index) => {
             return { ...row, Id: index, Selected: 0 } as PriorityRecord;
@@ -216,29 +213,28 @@ export const useActionsData = (props: useActionsDataProps) => {
   // CSV Download: download rawData.current as CSV file
   const handleCsvDownload = () => {
     if (!hasData) return;
-    if (!csvFields) return;
 
     const csv1 = Papa.unparse(prioritiesData, {
       delimiter: ",",
-      columns: csvFields,
+      columns: CSV_FIELDS,
       header: true,
     })
 
     const csv2 = Papa.unparse(defenseData, {
       delimiter: ",",
-      columns: csvFields,
+      columns: CSV_FIELDS,
       header: true,
     });
 
     const csv3 = Papa.unparse(supportData, {
       delimiter: ",",
-      columns: csvFields,
+      columns: CSV_FIELDS,
       header: true,
     });
 
     const csv4 = Papa.unparse(facilitiesData, {
       delimiter: ",",
-      columns: csvFields,
+      columns: CSV_FIELDS,
       header: true,
     });
 
