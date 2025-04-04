@@ -1,16 +1,16 @@
 import TableCell from "@mui/material/TableCell";
-import { TableColumnDefinition } from "./types";
+import { AppTableRow, TableColumnDefinition } from "./types";
 import { useEffect, useRef, useState } from "react";
 import { Popover, TextField } from "@mui/material";
 
-export interface EnhancedTableCellProps {
-  def: TableColumnDefinition; // Column definition for the cell
-  align: "left" | "right"; // Alignment of the cell content
-  value: any; // Value to be displayed in the cell
-  handleUpdate?: (value: any) => void; // Function to handle value update
+export interface EnhancedTableCellProps<T extends AppTableRow> {
+  def: TableColumnDefinition<T>;
+  align: "left" | "right";
+  value: any; 
+  handleUpdate?: (value: any) => void; 
 }
 
-export const EnhancedTableCell = (props: EnhancedTableCellProps) => {
+export function EnhancedTableCell<T extends AppTableRow> (props: EnhancedTableCellProps<T>) {
   const { def, align, value, handleUpdate } = props;
 
   // Popover (container for editor)
@@ -56,7 +56,7 @@ export const EnhancedTableCell = (props: EnhancedTableCellProps) => {
     <>
       <TableCell
         width={def.width}
-        key={def.id}
+        key={def.id as string}
         align={align}
         sx={{ padding: "0.4rem", minWidth: def.width }}
       >

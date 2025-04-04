@@ -46,7 +46,7 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
   // Given location prefix, we need to translate between the field
   // of `CapacityAssessmentRecord` and `CapacityAssessmentTableRow`
   const tableKeyToRecordKey = useCallback(
-    (key: string) => {
+    (key: keyof CapacityAssessmentTableRow) => {
       if (key === "Current") {
         return `${locationPrefix}_Current` as keyof CapacityAssessmentRecord;
       } else if (key === "CapSteady") {
@@ -65,15 +65,15 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
   const recordKeyToTableKey = useCallback(
     (key: keyof CapacityAssessmentRecord) => {
       if (key === `${locationPrefix}_Current`) {
-        return "Current";
+        return "Current" as keyof CapacityAssessmentTableRow;
       } else if (key === `${locationPrefix}_Cap-Steady`) {
-        return "CapSteady";
+        return "CapSteady" as keyof CapacityAssessmentTableRow;
       } else if (key === `${locationPrefix}_Cap-Contingency`) {
-        return "CapContingency";
+        return "CapContingency" as keyof CapacityAssessmentTableRow;
       } else if (key === "Inc") {
-        return "Selected";
+        return "Selected" as keyof CapacityAssessmentTableRow;
       } else {
-        return key as string;
+        return key as keyof CapacityAssessmentTableRow;
       }
     },
     [locationPrefix]
@@ -84,7 +84,7 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
   const [orderBy, setOrderBy] =
     useState<keyof CapacityAssessmentRecord>("Category");
 
-  const setOrderByColId = (id: string) => {
+  const setOrderByColId = (id: keyof CapacityAssessmentTableRow) => {
     // This method is exposed to the table
     // The id here should be key of CapacityAssessmentTableRow
     // But we need to convert it to key of CapacityAssessmentRecord

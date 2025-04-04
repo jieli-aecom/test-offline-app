@@ -2,7 +2,7 @@ import { useState } from "react";
 import { SidebarLayout } from "../../components/sidebar-layout";
 import { Sidebar } from "./components/sidebar";
 import { useCapacitiesData } from "./hooks/use-capacities-data";
-import { DataViewArea } from "../../components/app-table/app-table";
+import { EnhancedTable } from "../../components/app-table/enhanced-table";
 import {  capacityAssessmentTableDefinitions } from "./types/table";
 
 export const CapabilityAssessment = () => {
@@ -52,6 +52,7 @@ export const CapabilityAssessment = () => {
 
     // Table attribute update handler
     updateTableAttribute,
+    
   } = useCapacitiesData({
     handleCsvUploadError,
     handleCsvUploadSuccess,
@@ -77,7 +78,7 @@ export const CapabilityAssessment = () => {
         />
       }
       mainContent={
-        <DataViewArea
+        <EnhancedTable
           hasData={hasData}
           dataLength={dataLength}
           tableView={tableView}

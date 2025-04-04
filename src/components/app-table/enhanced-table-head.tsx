@@ -6,7 +6,7 @@ import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import { visuallyHidden } from "@mui/utils";
 import { Order } from "../../pages/capability-assessment/types/table";
-import { TableColumnDefinition } from "./types";
+import { AppTableRow, TableColumnDefinition } from "./types";
 
 interface Data {
   id: number;
@@ -17,14 +17,14 @@ interface Data {
   protein: number;
 }
 
-export interface EnhancedTableHeadProps {
+export interface EnhancedTableHeadProps<T extends AppTableRow> {
   onRequestSort: (event: MouseEvent<unknown>, property: string) => void;
   order: Order;
-  orderBy: string;
-  columnDefinitions: TableColumnDefinition[];
+  orderBy: keyof T;
+  columnDefinitions: TableColumnDefinition<T>[];
 }
 
-export function EnhancedTableHead(props: EnhancedTableHeadProps) {
+export function EnhancedTableHead<T extends AppTableRow>(props: EnhancedTableHeadProps<T>) {
   const {
     order,
     orderBy,
@@ -42,7 +42,7 @@ export function EnhancedTableHead(props: EnhancedTableHeadProps) {
         </TableCell>
         {props.columnDefinitions.map((column) => (
           <TableCell
-            key={column.id}
+            key={column.id as string}
             width={column.width}
             align={"left"}
             padding="none"

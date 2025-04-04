@@ -8,15 +8,15 @@ import { TablePagination } from "@mui/material";
 import { TableColumnDefinition, AppTableRow } from "./types";
 import { EnhancedTableRow } from "./enhanced-table-row";
 
-export interface DataViewArea {
+export interface EnhancedTableProps<T extends AppTableRow> {
   hasData: boolean;
   dataLength: number;
-  tableView: AppTableRow[];
-  columnDefinitions: TableColumnDefinition[]; // Corresponding to each column
+  tableView: T[];
+  columnDefinitions: TableColumnDefinition<T>[];
   order: Order;
-  orderBy: string; // Should be `id` field of one of `columnDefinitions`
+  orderBy: keyof T
   setOrder: (order: Order) => void;
-  setOrderBy: (orderBy: string) => void; // Arg should be `id` field of one of `columnDefinitions`
+  setOrderBy: (orderBy: keyof T) => void;
   page: number;
   setPage: (page: number) => void;
   rowsPerPage: number;
@@ -24,7 +24,7 @@ export interface DataViewArea {
   handleUpdateTableAttribute: (rowId: number, key: string, value: any) => void; // rowId is the `Id` field of the row, `key` is the key to update
 }
 
-export const DataViewArea = (props: DataViewArea) => {
+export function EnhancedTable<T extends AppTableRow>(props: EnhancedTableProps<T>) {
   const handleChangePage = (_: unknown, newPage: number) => {
     props.setPage(newPage);
   };

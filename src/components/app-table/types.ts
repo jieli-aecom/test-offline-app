@@ -1,5 +1,5 @@
-export type TableColumnDefinition = {
-  id: string;
+export type TableColumnDefinition<T extends AppTableRow> = {
+  id: keyof T;
   label: string;
   numeric: boolean;
   width: string;
