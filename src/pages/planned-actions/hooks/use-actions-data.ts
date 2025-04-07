@@ -14,6 +14,7 @@ import {
   SupportRecord,
 } from "../types/records";
 import { CSV_FIELDS } from "../types/csv-fields";
+import useExcelHandler from "../../../hooks/useExcelHandler";
 
 const PRIORITY_DATA_LOCAL_STORAGE_KEY =
   "actions-data-priority-regional-share-design";
@@ -33,12 +34,50 @@ export const DEFAULT_LOCAL_DIRECTORY =
   "C:/app-example/sample-data/";
 export const FILE_NAME = "actions-data.csv";
 
-export const useActionsData = (props: useActionsDataProps) => {
+export const useActionsData = () => {
   // Four pieces of raw data
   const [prioritiesData, setPrioritiesData] = useState<PriorityRecord[]>([]);
   const [defenseData, setDefenseData] = useState<DefenseRecord[]>([]);
   const [supportData, setSupportData] = useState<SupportRecord[]>([]);
   const [facilitiesData, setFacilitiesData] = useState<FacilitiesRecord[]>([]);
+
+  // Excel handler used by this hook
+  const {
+    workbookToCsv,
+    csvToWorkbookDownload,
+  } = useExcelHandler("actions-data");
+
+  // Success or error messages
+  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const handleUploadError = () => {
+    setErrorMessage("Error uploading file");
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 1500)
+  }
+
+  const handleUploadSuccess = () => {
+    setSuccessMessage("File uploaded successfully");
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 1500)
+  }
+
+  const handleDownloadError = (message: string) => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 1500)
+  }
+
+  const handleDownloadSuccess = () => {
+    setSuccessMessage("File downloaded successfully");
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 1500)
+  }
 
   // Check local storage
   useEffect(() => {
@@ -78,8 +117,8 @@ export const useActionsData = (props: useActionsDataProps) => {
     );
   }, [prioritiesData, defenseData, supportData, facilitiesData]);
 
-  // CSV Upload: populate rawData.current and produce table data
-  const handleCsvUpload = (event: ChangeEvent<HTMLInputElement>) => {
+  // Excel Upload: populate rawData.current and produce table data
+  const handleExcelWorkbookUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) {
       return;
@@ -87,8 +126,16 @@ export const useActionsData = (props: useActionsDataProps) => {
 
     const reader = new FileReader();
 
-    reader.onload = () => {
-      const text = reader.result as string;
+    reader.onload = (event: ProgressEvent<FileReader>) => {
+      const text = workbookToCsv(event);
+
+      if (!text) {
+        console.error("No data to parse");
+        return;
+      }
+
+      handleUploadSuccess();
+
       const lines = text.split("\n").map((line) => line.trim());
 
       // Line 1 to 2
@@ -102,7 +149,7 @@ export const useActionsData = (props: useActionsDataProps) => {
             inputCsvFields?.includes(field as string)
           );
           if (!formatCorrect) {
-            props.handleCsvUploadError();
+            handleUploadError();
             return;
           }
 
@@ -116,10 +163,9 @@ export const useActionsData = (props: useActionsDataProps) => {
             PRIORITY_DATA_LOCAL_STORAGE_KEY,
             JSON.stringify(parsedData)
           );
-          props.handleCsvUploadSuccess();
         },
         error: (_: any, __: any) => {
-          props.handleCsvUploadError();
+          handleUploadError();
         },
       });
 
@@ -133,7 +179,7 @@ export const useActionsData = (props: useActionsDataProps) => {
             results.meta.fields?.includes(field as string)
           );
           if (!formatCorrect) {
-            props.handleCsvUploadError();
+            handleUploadError();
             return;
           }
           const parsedData = results.data.map((row: any, index) => {
@@ -146,7 +192,7 @@ export const useActionsData = (props: useActionsDataProps) => {
           );
         },
         error: (_: any, __: any) => {
-          props.handleCsvUploadError();
+          handleUploadError();
         },
       });
 
@@ -159,7 +205,7 @@ export const useActionsData = (props: useActionsDataProps) => {
             results.meta.fields?.includes(field as string)
           );
           if (!formatCorrect) {
-            props.handleCsvUploadError();
+            handleUploadError();
             return;
           }
           const parsedData = results.data.map((row: any, index) => {
@@ -172,7 +218,7 @@ export const useActionsData = (props: useActionsDataProps) => {
           );
         },
         error: (_: any, __: any) => {
-          props.handleCsvUploadError();
+          handleUploadError();
         },
       });
 
@@ -186,7 +232,7 @@ export const useActionsData = (props: useActionsDataProps) => {
             results.meta.fields?.includes(field as string)
           );
           if (!formatCorrect) {
-            props.handleCsvUploadError();
+            handleUploadError();
             return;
           }
           const parsedData = results.data.map((row: any, index) => {
@@ -199,12 +245,12 @@ export const useActionsData = (props: useActionsDataProps) => {
           );
         },
         error: (_: any, __: any) => {
-          props.handleCsvUploadError();
+          handleUploadError();
         },
       });
     };
 
-    reader.readAsText(file);
+    reader.readAsArrayBuffer(file);
     reader.onerror = (error) => {
       console.error("Error reading file:", error);
     };
@@ -239,15 +285,12 @@ export const useActionsData = (props: useActionsDataProps) => {
     });
 
     const csv = `${csv1}\n${csv2}\n${csv3}\n${csv4}`;
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", FILE_NAME);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    const { success, message } = csvToWorkbookDownload(csv);
+    if (success) {
+      handleDownloadSuccess();
+    } else {
+      handleDownloadError(message);
+    }
   };
 
   // Data update handlers
@@ -312,7 +355,11 @@ export const useActionsData = (props: useActionsDataProps) => {
     handleFacilitiesDataUpdate,
 
     // Handlers for CSV upload/download result
-    handleCsvUpload,
+    handleExcelWorkbookUpload,
     handleCsvDownload,
+
+    // Messages currently active
+    successMessage,
+    errorMessage,
   };
 };

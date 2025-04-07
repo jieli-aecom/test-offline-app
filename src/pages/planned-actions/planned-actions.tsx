@@ -1,26 +1,9 @@
-import { useState } from "react";
 import { SidebarLayout } from "../../components/sidebar-layout";
 import { Sidebar } from "./components/sidebar";
 import { useActionsData } from "./hooks/use-actions-data";
 import { MainView } from "./components/main-view";
 
 export const PlannedActions = () => {
-  const [showCsvUploadError, setShowCsvUploadError] = useState(false);
-  const [showCsvUploadSuccess, setShowCsvUploadSuccess] = useState(false);
-  const handleCsvUploadError = () => {
-    setShowCsvUploadError(true);
-    setTimeout(() => {
-      setShowCsvUploadError(false);
-    }, 3000);
-  };
-
-  const handleCsvUploadSuccess = () => {
-    setShowCsvUploadSuccess(true);
-    setTimeout(() => {
-      setShowCsvUploadSuccess(false);
-    }, 3000);
-  };
-
   const {
     hasData,
     prioritiesData,
@@ -31,21 +14,20 @@ export const PlannedActions = () => {
     handleDefenseDataUpdate,
     handleSupportDataUpdate,
     handleFacilitiesDataUpdate,
-    handleCsvUpload,
+    handleExcelWorkbookUpload,
     handleCsvDownload,
-  } = useActionsData({
-    handleCsvUploadError,
-    handleCsvUploadSuccess,
-  });
+    successMessage,
+    errorMessage
+  } = useActionsData();
   return (
     <SidebarLayout
       sidebarContent={
         <Sidebar
           hasData={hasData}
-          handleCsvUpload={handleCsvUpload}
+          handleExcelWorkbookUpload={handleExcelWorkbookUpload}
           handleCsvDownload={handleCsvDownload}
-          showCsvUploadError={showCsvUploadError}
-          showCsvUploadSuccess={showCsvUploadSuccess}
+          successMessage={successMessage}
+          errorMessage={errorMessage}
         />
       }
       mainContent={

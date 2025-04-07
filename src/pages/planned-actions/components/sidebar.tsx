@@ -19,10 +19,10 @@ const VisuallyHiddenInput = styled("input")({
 
 export interface SidebarProps {
   hasData: boolean;
-  handleCsvUpload: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleExcelWorkbookUpload: (event: ChangeEvent<HTMLInputElement>) => void;
   handleCsvDownload: () => void;
-  showCsvUploadError: boolean;
-  showCsvUploadSuccess: boolean;
+  successMessage?: string;
+  errorMessage?: string;
 }
 
 export function Sidebar(props: SidebarProps) {
@@ -85,8 +85,8 @@ export function Sidebar(props: SidebarProps) {
           LOAD DATA
           <VisuallyHiddenInput
             type="file"
-            accept=".csv"
-            onChange={props.handleCsvUpload}
+            accept=".xlsx"
+            onChange={props.handleExcelWorkbookUpload}
             ref={uploadInputRef}
           />
         </Button>
@@ -97,12 +97,12 @@ export function Sidebar(props: SidebarProps) {
         {showCopied && (
           <Alert severity="success">Local file directory copied.</Alert>
         )}
-        {props.showCsvUploadSuccess && (
-          <Alert severity="success">Data upload successful.</Alert>
+        {!!props.successMessage && (
+          <Alert severity="success">{props.successMessage}</Alert>
         )}
-        {props.showCsvUploadError && (
+        {!!props.errorMessage && (
           <Alert severity="error">
-            The uploaded file does not have the correct format.
+            {props.errorMessage}
           </Alert>
         )}
       </div>
@@ -141,7 +141,7 @@ export function Sidebar(props: SidebarProps) {
           onClick={props.handleCsvDownload}
           disabled={!props.hasData}
         >
-          Dump Data
+          Write Data
         </Button>
       </div>
     </div>
