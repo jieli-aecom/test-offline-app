@@ -55,7 +55,7 @@ export function EnhancedTable<T extends AppTableRow>(
     rowId: number, // rowId is the `Id` field of the row
     currentSelected: number // 0 or 1, 0 means not selected, 1 means selected
   ) => {
-    if (!props.disableSelect) return;
+    if (props.disableSelect) return;
     const newSelected = currentSelected === 1 ? 0 : 1;
     props.handleUpdateTableAttribute(rowId, "Selected", newSelected);
   };

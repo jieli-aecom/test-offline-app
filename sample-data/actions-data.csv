@@ -1,5 +1,5 @@
 Item,Priority,NS Rota,NSA Naples,NAS Sigonella,NSA Souda Bay,NSF Deveselu,NSF Redzikowo,Lossiemouth,Crombie,Keflavik,Grindavik,Evenes,Ramsund
-,,Extremely High,High,Moderate,Low,Low,Low,Exclude,Low,Low,Low,Low,Low
+,,Moderate,High,Moderate,Low,Low,Low,Exclude,Low,Low,Low,Low,Low
 Item,Priority,NS Rota,NSA Naples,NAS Sigonella,NSA Souda Bay,NSF Deveselu,NSF Redzikowo,Lossiemouth,Crombie,Keflavik,Grindavik,Evenes,Ramsund
 Aircraft,High,Move From,Surge,Keep Steady,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined
 Air Operations,High,Undefined,Surge,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined,Undefined

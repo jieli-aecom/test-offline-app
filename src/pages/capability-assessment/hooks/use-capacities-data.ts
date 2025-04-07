@@ -197,7 +197,7 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
       rawData.current = parsed;
       produceTableData();
     }
-  })
+  }, [])
 
   // CSV Upload: populate rawData.current and produce table data
   const handleCsvUpload = (event: ChangeEvent<HTMLInputElement>) => {

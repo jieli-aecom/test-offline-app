@@ -47,6 +47,7 @@ export function MainView(props: MainViewProps) {
         setRowsPerPage={props.setRowsPerPage}
         handleUpdateTableAttribute={props.handleUpdateTableAttribute}
         hideFooter={false}
+        disableSelect={false}
       />
     </div>
   );

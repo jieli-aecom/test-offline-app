@@ -77,20 +77,20 @@ export const CapabilityAssessment = () => {
         />
       }
       mainContent={
-        <MainView 
-        hasData={hasData}
-        dataLength={dataLength}
-        tableView={tableView}
-        columnDefinitions={capacityAssessmentTableDefinitions}
-        order={order}
-        setOrder={setOrder}
-        orderBy={orderByColId}
-        setOrderBy={setOrderByColId}
-        page={page}
-        setPage={setPage}
-        rowsPerPage={rowsPerPage}
-        setRowsPerPage={setRowsPerPage}
-        handleUpdateTableAttribute={updateTableAttribute}
+        <MainView
+          hasData={hasData}
+          dataLength={dataLength}
+          tableView={tableView}
+          columnDefinitions={capacityAssessmentTableDefinitions}
+          order={order}
+          setOrder={setOrder}
+          orderBy={orderByColId}
+          setOrderBy={setOrderByColId}
+          page={page}
+          setPage={setPage}
+          rowsPerPage={rowsPerPage}
+          setRowsPerPage={setRowsPerPage}
+          handleUpdateTableAttribute={updateTableAttribute}
         />
       }
     />
