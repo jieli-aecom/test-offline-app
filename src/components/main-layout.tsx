@@ -51,7 +51,7 @@ interface Props {
 
 const drawerWidth = 240;
 
-const TITLE = 'Regional Share Design';
+const TITLE = 'Regional Shore Design';
 const TOOLBAR_HEIGHT_PX = 64; // px
 
 export function MainLayout(props: Props) {

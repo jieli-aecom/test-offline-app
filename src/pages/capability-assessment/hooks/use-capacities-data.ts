@@ -16,21 +16,52 @@ import { LOCATIONS, Location } from "../consts/locations";
 import { Domain } from "../consts/domains";
 import { Category } from "../consts/categories";
 import { CapacityAssessmentTableRow, Order } from "../types/table";
+import useExcelHandler from "../../../hooks/useExcelHandler";
 
 const LOCAL_STORAGE_KEY = "capacities-data-regional-share-design";
-
-export interface UseCapacitiesDataProps {
-  handleCsvUploadError: () => void;
-  handleCsvUploadSuccess: () => void;
-}
+const SHEET_NAME = "capacities-data";
 
 export const DEFAULT_LOCAL_DIRECTORY =
   "C:/app-example/sample-data/";
 export const FILE_NAME = "capacities-data.csv";
 
-export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
+export const useCapacitiesData = () => {
   // Data
   const rawData = useRef<CapacityAssessmentRecord[]>([]);
+
+  // Excel handler
+  const {workbookToCsv, csvToWorkbookDownload} = useExcelHandler(SHEET_NAME);
+
+  // Messages state
+  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const handleUploadError = (message: string) => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 1500)
+  }
+
+  const handleUploadSuccess = () => {
+    setSuccessMessage("File uploaded successfully");
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 1500)
+  }
+
+  const handleDownloadError = (message: string) => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 1500)
+  }
+
+  const handleDownloadSuccess = () => {
+    setSuccessMessage("File downloaded successfully");
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 1500)
+  }
 
   // Filter states
   const [selectedLocation, setSelectedLocation] = useState<Location>(
@@ -208,8 +239,12 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
 
     const reader = new FileReader();
 
-    reader.onload = () => {
-      const text = reader.result as string;
+    reader.onload = (event: ProgressEvent<FileReader>) => {
+      const text = workbookToCsv(event);
+      if (!text) {
+        handleUploadError("No file selected or file is empty");
+
+      }
       Papa.parse(text, {
         header: true,
         skipEmptyLines: true,
@@ -220,7 +255,7 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
             (CAPACITY_ASSESSMENT_KEYS as string[]).includes(field)
           );
           if (!formatCorrect) {
-            props.handleCsvUploadError();
+            handleUploadError("Invalid file format");
             return;
           }
           const parsedData = results.data.map(
@@ -234,15 +269,15 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
 
           // Produce table data (of type CapacityAssessmentTableRow[])
           produceTableData();
-          props.handleCsvUploadSuccess();
+          handleUploadSuccess();
         },
         error: (_: any, __: any) => {
-          props.handleCsvUploadError();
+          handleUploadError("Error parsing CSV file");
         },
       });
     };
 
-    reader.readAsText(file);
+    reader.readAsArrayBuffer(file);
     reader.onerror = (error) => {
       console.error("Error reading file:", error);
     };
@@ -256,16 +291,12 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
       header: true,
       columns: CAPACITY_ASSESSMENT_KEYS,
     });
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.setAttribute("download", FILE_NAME);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    const {success, message} = csvToWorkbookDownload(csv);
+    if (success) {
+      handleDownloadSuccess();
+    } else {
+      handleDownloadError(message);
+    }
   };
 
   const handleUpdateTableAttribute = (id: number, colId: keyof CapacityAssessmentTableRow, value: any) => {
@@ -336,5 +367,9 @@ export const useCapacitiesData = (props: UseCapacitiesDataProps) => {
 
     // Handler to update table attribute
     updateTableAttribute: handleUpdateTableAttribute,
+
+    // Messages
+    successMessage,
+    errorMessage,
   };
 };

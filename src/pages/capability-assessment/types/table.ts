@@ -39,7 +39,7 @@ export const capacityAssessmentTableDefinitions: TableColumnDefinition<CapacityA
     label: "Category",
     numeric: false,
     width: "6rem",
-    editable: true,
+    editable: false,
     dropdown: true,
     dropdownOptions: CATEGORIES,
   },
@@ -55,14 +55,14 @@ export const capacityAssessmentTableDefinitions: TableColumnDefinition<CapacityA
     label: "Measure",
     numeric: false,
     width: "15rem",
-    editable: true,
+    editable: false,
   },
   {
     id: "Units" as keyof CapacityAssessmentTableRow,
     label: "Units",
     numeric: false,
     width: "8rem",
-    editable: true,
+    editable: false,
   },
   {
     id: "Current" as keyof CapacityAssessmentTableRow,
@@ -70,6 +70,7 @@ export const capacityAssessmentTableDefinitions: TableColumnDefinition<CapacityA
     numeric: true,
     width: "6rem",
     editable: true,
+    color: (_) => "#61CBF3"
   },
   {
     id: "CapSteady" as keyof CapacityAssessmentTableRow,
@@ -77,6 +78,7 @@ export const capacityAssessmentTableDefinitions: TableColumnDefinition<CapacityA
     numeric: true,
     width: "5rem",
     editable: true,
+    color: (_) => "#83E28E"
   },
   {
     id: "CapContingency" as keyof CapacityAssessmentTableRow,
@@ -84,6 +86,7 @@ export const capacityAssessmentTableDefinitions: TableColumnDefinition<CapacityA
     numeric: true,
     width: "5rem",
     editable: true,
+    color: (_) => "#EE6C9A"
   }
 ]
 

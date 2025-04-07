@@ -35,8 +35,8 @@ export interface SidebarProps {
   setSelectedDomains: (newValues: Domain[]) => void;
   selectedCategories: Category[];
   setSelectedCategories: (newValues: Category[]) => void;
-  showCsvUploadError: boolean;
-  showCsvUploadSuccess: boolean;
+  successMessage?: string;
+  errorMessage?: string;
 }
 
 export const Sidebar = (props: SidebarProps) => {
@@ -100,7 +100,7 @@ export const Sidebar = (props: SidebarProps) => {
           LOAD DATA
           <VisuallyHiddenInput
             type="file"
-            accept=".csv"
+            accept=".xlsx"
             onChange={props.handleCsvUpload}
             ref={uploadInputRef}
           />
@@ -112,12 +112,12 @@ export const Sidebar = (props: SidebarProps) => {
         {showCopied && (
           <Alert severity="success">Local file directory copied.</Alert>
         )}
-        {props.showCsvUploadSuccess && (
-          <Alert severity="success">Data upload successful.</Alert>
+        {!!props.successMessage && (
+          <Alert severity="success">{props.successMessage}</Alert>
         )}
-        {props.showCsvUploadError && (
+        {!!props.errorMessage && (
           <Alert severity="error">
-            The uploaded file does not have the correct format.
+            {props.errorMessage}
           </Alert>
         )}
       </div>
@@ -190,7 +190,7 @@ export const Sidebar = (props: SidebarProps) => {
           onClick={props.handleCsvDownload}
           disabled={!props.hasData}
         >
-          Dump Data
+          Write Data
         </Button>
       </div>
     </div>

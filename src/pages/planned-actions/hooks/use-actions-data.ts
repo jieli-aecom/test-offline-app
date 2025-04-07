@@ -32,7 +32,7 @@ export interface useActionsDataProps {
 
 export const DEFAULT_LOCAL_DIRECTORY =
   "C:/app-example/sample-data/";
-export const FILE_NAME = "actions-data.csv";
+const SHEET_NAME = "actions-data";
 
 export const useActionsData = () => {
   // Four pieces of raw data
@@ -45,14 +45,14 @@ export const useActionsData = () => {
   const {
     workbookToCsv,
     csvToWorkbookDownload,
-  } = useExcelHandler("actions-data");
+  } = useExcelHandler(SHEET_NAME);
 
   // Success or error messages
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const handleUploadError = () => {
-    setErrorMessage("Error uploading file");
+  const handleUploadError = (message: string) => {
+    setErrorMessage(message);
     setTimeout(() => {
       setErrorMessage("");
     }, 1500)
@@ -121,6 +121,7 @@ export const useActionsData = () => {
   const handleExcelWorkbookUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) {
+      handleUploadError("No file selected");
       return;
     }
 
@@ -130,7 +131,7 @@ export const useActionsData = () => {
       const text = workbookToCsv(event);
 
       if (!text) {
-        console.error("No data to parse");
+        handleUploadError("No data to parse");
         return;
       }
 
@@ -149,7 +150,7 @@ export const useActionsData = () => {
             inputCsvFields?.includes(field as string)
           );
           if (!formatCorrect) {
-            handleUploadError();
+            handleUploadError("Error parsing lines 1 to 2");
             return;
           }
 
@@ -165,7 +166,7 @@ export const useActionsData = () => {
           );
         },
         error: (_: any, __: any) => {
-          handleUploadError();
+          handleUploadError("Error parsing lines 1 to 2");
         },
       });
 
@@ -179,7 +180,7 @@ export const useActionsData = () => {
             results.meta.fields?.includes(field as string)
           );
           if (!formatCorrect) {
-            handleUploadError();
+            handleUploadError("Error parsing lines 3 to 12");
             return;
           }
           const parsedData = results.data.map((row: any, index) => {
@@ -192,7 +193,7 @@ export const useActionsData = () => {
           );
         },
         error: (_: any, __: any) => {
-          handleUploadError();
+          handleUploadError("Error parsing lines 3 to 12");
         },
       });
 
@@ -205,7 +206,7 @@ export const useActionsData = () => {
             results.meta.fields?.includes(field as string)
           );
           if (!formatCorrect) {
-            handleUploadError();
+            handleUploadError("Error parsing lines 13 to 25");
             return;
           }
           const parsedData = results.data.map((row: any, index) => {
@@ -218,7 +219,7 @@ export const useActionsData = () => {
           );
         },
         error: (_: any, __: any) => {
-          handleUploadError();
+          handleUploadError("Error parsing lines 13 to 25");
         },
       });
 
@@ -232,7 +233,7 @@ export const useActionsData = () => {
             results.meta.fields?.includes(field as string)
           );
           if (!formatCorrect) {
-            handleUploadError();
+            handleUploadError("Error parsing lines 25 to end");
             return;
           }
           const parsedData = results.data.map((row: any, index) => {
@@ -245,7 +246,7 @@ export const useActionsData = () => {
           );
         },
         error: (_: any, __: any) => {
-          handleUploadError();
+          handleUploadError("Error parsing lines 25 to end");
         },
       });
     };

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { SidebarLayout } from "../../components/sidebar-layout";
 import { Sidebar } from "./components/sidebar";
 import { useCapacitiesData } from "./hooks/use-capacities-data";
@@ -6,21 +5,6 @@ import { capacityAssessmentTableDefinitions } from "./types/table";
 import { MainView } from "./components/main-view";
 
 export const CapabilityAssessment = () => {
-  const [showCsvUploadError, setShowCsvUploadError] = useState(false);
-  const [showCsvUploadSuccess, setShowCsvUploadSuccess] = useState(false);
-  const handleCsvUploadError = () => {
-    setShowCsvUploadError(true);
-    setTimeout(() => {
-      setShowCsvUploadError(false);
-    }, 3000);
-  };
-
-  const handleCsvUploadSuccess = () => {
-    setShowCsvUploadSuccess(true);
-    setTimeout(() => {
-      setShowCsvUploadSuccess(false);
-    }, 3000);
-  };
   const {
     hasData,
     dataLength,
@@ -52,10 +36,11 @@ export const CapabilityAssessment = () => {
 
     // Table attribute update handler
     updateTableAttribute,
-  } = useCapacitiesData({
-    handleCsvUploadError,
-    handleCsvUploadSuccess,
-  });
+
+    // Messages
+    successMessage,
+    errorMessage,
+  } = useCapacitiesData();
 
   return (
     <SidebarLayout
@@ -72,8 +57,8 @@ export const CapabilityAssessment = () => {
           setSelectedDomains={setSelectedDomains}
           selectedCategories={selectedCategories}
           setSelectedCategories={setSelectedCategories}
-          showCsvUploadError={showCsvUploadError}
-          showCsvUploadSuccess={showCsvUploadSuccess}
+          successMessage={successMessage}
+          errorMessage={errorMessage}
         />
       }
       mainContent={
