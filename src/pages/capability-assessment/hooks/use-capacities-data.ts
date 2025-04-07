@@ -17,12 +17,13 @@ import { Domain } from "../consts/domains";
 import { Category } from "../consts/categories";
 import { CapacityAssessmentTableRow, Order } from "../types/table";
 import useExcelHandler from "../../../hooks/useExcelHandler";
+import { LOCAL_STORAGE_VERSION } from "../../../consts/local-storage-version";
 
-const LOCAL_STORAGE_KEY = "capacities-data-regional-share-design";
+const LOCAL_STORAGE_KEY =
+  "capacities-data-regional-share-design" + "-" + LOCAL_STORAGE_VERSION;
 const SHEET_NAME = "capacities-data";
 
-export const DEFAULT_LOCAL_DIRECTORY =
-  "C:/app-example/sample-data/";
+export const DEFAULT_LOCAL_DIRECTORY = "C:/app-example/";
 export const FILE_NAME = "capacities-data.csv";
 
 export const useCapacitiesData = () => {
@@ -30,7 +31,7 @@ export const useCapacitiesData = () => {
   const rawData = useRef<CapacityAssessmentRecord[]>([]);
 
   // Excel handler
-  const {workbookToCsv, csvToWorkbookDownload} = useExcelHandler(SHEET_NAME);
+  const { workbookToCsv, csvToWorkbookDownload } = useExcelHandler(SHEET_NAME);
 
   // Messages state
   const [successMessage, setSuccessMessage] = useState<string>("");
@@ -39,29 +40,29 @@ export const useCapacitiesData = () => {
     setErrorMessage(message);
     setTimeout(() => {
       setErrorMessage("");
-    }, 1500)
-  }
+    }, 1500);
+  };
 
   const handleUploadSuccess = () => {
     setSuccessMessage("File uploaded successfully");
     setTimeout(() => {
       setSuccessMessage("");
-    }, 1500)
-  }
+    }, 1500);
+  };
 
   const handleDownloadError = (message: string) => {
     setErrorMessage(message);
     setTimeout(() => {
       setErrorMessage("");
-    }, 1500)
-  }
+    }, 1500);
+  };
 
   const handleDownloadSuccess = () => {
     setSuccessMessage("File downloaded successfully");
     setTimeout(() => {
       setSuccessMessage("");
-    }, 1500)
-  }
+    }, 1500);
+  };
 
   // Filter states
   const [selectedLocation, setSelectedLocation] = useState<Location>(
@@ -88,7 +89,8 @@ export const useCapacitiesData = () => {
         return `${locationPrefix}_Cap-Contingency` as keyof CapacityAssessmentRecord;
       } else if (key === "Selected") {
         return "Inc" as keyof CapacityAssessmentRecord;
-      } {
+      }
+      {
         return key as keyof CapacityAssessmentRecord;
       }
     },
@@ -228,7 +230,7 @@ export const useCapacitiesData = () => {
       rawData.current = parsed;
       produceTableData();
     }
-  }, [])
+  }, []);
 
   // CSV Upload: populate rawData.current and produce table data
   const handleCsvUpload = (event: ChangeEvent<HTMLInputElement>) => {
@@ -243,7 +245,6 @@ export const useCapacitiesData = () => {
       const text = workbookToCsv(event);
       if (!text) {
         handleUploadError("No file selected or file is empty");
-
       }
       Papa.parse(text, {
         header: true,
@@ -291,7 +292,7 @@ export const useCapacitiesData = () => {
       header: true,
       columns: CAPACITY_ASSESSMENT_KEYS,
     });
-    const {success, message} = csvToWorkbookDownload(csv);
+    const { success, message } = csvToWorkbookDownload(csv);
     if (success) {
       handleDownloadSuccess();
     } else {
@@ -299,11 +300,15 @@ export const useCapacitiesData = () => {
     }
   };
 
-  const handleUpdateTableAttribute = (id: number, colId: keyof CapacityAssessmentTableRow, value: any) => {
+  const handleUpdateTableAttribute = (
+    id: number,
+    colId: keyof CapacityAssessmentTableRow,
+    value: any
+  ) => {
     // First update ref
     // Note id should be the same as the array indesx of `rawData.current`
     // Mutate the raw data
-    
+
     // Translate column name to record key
     const recordKey = tableKeyToRecordKey(colId);
 
@@ -311,11 +316,11 @@ export const useCapacitiesData = () => {
     rawData.current[id] = {
       ...rawData.current[id],
       [recordKey]: value,
-    }
+    };
 
     // Update local storage
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(rawData.current));
-    
+
     // Then, update the table data (view)
     const tableDataCopy = [...tableData];
     const tableRowIndex = tableDataCopy.findIndex((row) => row.Id === id);
@@ -329,7 +334,7 @@ export const useCapacitiesData = () => {
 
     // Then, `tableView` will be updated automatically
     // because it is derived from `tableData` and `page` and `rowsPerPage`
-  }
+  };
 
   return {
     // Has Data?

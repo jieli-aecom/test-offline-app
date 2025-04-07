@@ -1,11 +1,15 @@
 import { useRef } from "react";
 import { read, WorkBook, utils, writeFile } from "xlsx";
+import { LOCAL_STORAGE_VERSION } from "../consts/local-storage-version";
 
-const WORKBOOK_LOCAL_STORAGE = "workbook-local-storage";
+const WORKBOOK_LOCAL_STORAGE =
+  "workbook-local-storage" + "-" + LOCAL_STORAGE_VERSION;
 export interface DownloadReturn {
   success: boolean;
   message: string;
 }
+
+const FILE_NAME = "sample-data.xlsx";
 
 export default function useExcelHandler(focusSheetName: string) {
   const workbookRef = useRef<WorkBook>(null);
@@ -104,11 +108,11 @@ export default function useExcelHandler(focusSheetName: string) {
         }
       }
       workbookRef.current = newWorkbook;
-      writeFile(newWorkbook, `${focusSheetName}.xlsx`);
+      writeFile(newWorkbook, FILE_NAME);
     } else {
       // Modify the existing workbook
       workbookRef.current.Sheets[focusSheetName] = focusSheet;
-      writeFile(workbookRef.current, `${focusSheetName}.xlsx`);
+      writeFile(workbookRef.current, FILE_NAME);
     }
 
     return {

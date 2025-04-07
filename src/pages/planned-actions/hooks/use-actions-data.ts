@@ -15,15 +15,16 @@ import {
 } from "../types/records";
 import { CSV_FIELDS } from "../types/csv-fields";
 import useExcelHandler from "../../../hooks/useExcelHandler";
+import { LOCAL_STORAGE_VERSION } from "../../../consts/local-storage-version";
 
 const PRIORITY_DATA_LOCAL_STORAGE_KEY =
-  "actions-data-priority-regional-share-design";
+  `actions-data-priority-regional-share-design-${LOCAL_STORAGE_VERSION}`;
 const DEFENSE_DATA_LOCAL_STORAGE_KEY =
-  "actions-data-defense-regional-share-design";
+  `actions-data-defense-regional-share-design-${LOCAL_STORAGE_VERSION}`;
 const SUPPORT_DATA_LOCAL_STORAGE_KEY =
-  "actions-data-support-regional-share-design";
+  `actions-data-support-regional-share-design-${LOCAL_STORAGE_VERSION}`;
 const FACILITIES_DATA_LOCAL_STORAGE_KEY =
-  "actions-data-facilities-regional-share-design";
+  `actions-data-facilities-regional-share-design-${LOCAL_STORAGE_VERSION}`;
 
 export interface useActionsDataProps {
   handleCsvUploadError: () => void;
@@ -31,7 +32,7 @@ export interface useActionsDataProps {
 }
 
 export const DEFAULT_LOCAL_DIRECTORY =
-  "C:/app-example/sample-data/";
+  "C:/app-example/";
 const SHEET_NAME = "actions-data";
 
 export const useActionsData = () => {
