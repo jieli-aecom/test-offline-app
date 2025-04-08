@@ -54,7 +54,8 @@ export function Sidebar(props: SidebarProps) {
         <div className="w-full flex gap-2 items-center">
           <TextField
             id="default-local-file-path"
-            label="Local File Directory"
+            label="Reference File Directory"
+            disabled={true}
             size="small"
             sx={{ fontSize: "0.9rem" }}
             value={localPath}
@@ -115,7 +116,8 @@ export function Sidebar(props: SidebarProps) {
         <div className="w-full flex gap-2 items-center">
           <TextField
             id="default-local-file-path-repeat"
-            label="Local File Directory"
+            label="Reference File Directory"
+            disabled={true}
             size="small"
             sx={{ fontSize: "0.9rem" }}
             value={localPath}

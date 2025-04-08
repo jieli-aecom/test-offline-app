@@ -69,12 +69,13 @@ export const Sidebar = (props: SidebarProps) => {
         <div className="w-full flex gap-2 items-center">
           <TextField
             id="default-local-file-path"
-            label="Local File Directory"
+            label="Reference File Directory"
             size="small"
             sx={{ fontSize: "0.9rem" }}
             value={localPath}
             onChange={(e) => setLocalPath(e.target.value)}
             variant="outlined"
+            disabled={true}
             fullWidth
           />
           <IconButton
@@ -164,12 +165,13 @@ export const Sidebar = (props: SidebarProps) => {
         <div className="w-full flex gap-2 items-center">
           <TextField
             id="default-local-file-path-repeat"
-            label="Local File Directory"
+            label="Reference File Directory"
             size="small"
             sx={{ fontSize: "0.9rem" }}
             value={localPath}
             onChange={(e) => setLocalPath(e.target.value)}
             variant="outlined"
+            disabled={true}
             fullWidth
           />
           <IconButton
